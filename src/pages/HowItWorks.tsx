@@ -59,7 +59,7 @@ const HowItWorks: React.FC = () => {
   ]
 
   return (
-    <div className="bg-white overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 overflow-hidden">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-blue-400 via-blue-500 to-duck-500 text-white py-20 lg:py-32">
         <div className="absolute inset-0 overflow-hidden">
@@ -102,10 +102,10 @@ const HowItWorks: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               Simple as 1, 2, 3, 4! ✨
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 dark:text-gray-400">
               Get started with MyDuckRewards in just four easy steps
             </p>
           </motion.div>
@@ -123,13 +123,13 @@ const HowItWorks: React.FC = () => {
                       <span className="text-sm font-bold text-gray-700">{step.step}</span>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-3 text-gray-900">{step.title}</h3>
-                  <p className="text-gray-600 mb-4 leading-relaxed">{step.description}</p>
-                  <p className="text-sm text-gray-500">{step.details}</p>
+                  <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">{step.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-4 leading-relaxed">{step.description}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{step.details}</p>
                   
                   {index < 3 && (
                     <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
-                      <ArrowRight className="w-8 h-8 text-gray-300" />
+                      <ArrowRight className="w-8 h-8 text-gray-300 dark:text-gray-600" />
                     </div>
                   )}
                 </div>
@@ -140,7 +140,7 @@ const HowItWorks: React.FC = () => {
       </section>
 
       {/* What's Inside Each Duck */}
-      <section className="py-20 bg-gradient-to-br from-duck-50 to-blue-50">
+      <section className="py-20 bg-gradient-to-br from-duck-50 to-blue-50 dark:from-duck-900/20 dark:to-blue-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
@@ -148,10 +148,10 @@ const HowItWorks: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               What's Inside Each Duck? 🦆
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 dark:text-gray-400">
               Double the value with instant rewards and future savings
             </p>
           </motion.div>
@@ -163,8 +163,8 @@ const HowItWorks: React.FC = () => {
                 <div className="w-16 h-16 bg-gradient-to-r from-duck-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Trophy size={32} className="text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Instant Rewards</h3>
-                <p className="text-gray-600">Get immediate value right away</p>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Instant Rewards</h3>
+                <p className="text-gray-600 dark:text-gray-400">Get immediate value right away</p>
               </div>
               
               <div className="space-y-4">
@@ -181,8 +181,8 @@ const HowItWorks: React.FC = () => {
                       {reward.icon}
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900">{reward.title}</h4>
-                      <p className="text-gray-600 text-sm">{reward.description}</p>
+                      <h4 className="font-semibold text-gray-900 dark:text-white">{reward.title}</h4>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">{reward.description}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -195,8 +195,8 @@ const HowItWorks: React.FC = () => {
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Percent size={32} className="text-white" />
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Business Discounts</h3>
-                <p className="text-gray-600">"Duck off your Bill" savings</p>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Business Discounts</h3>
+                <p className="text-gray-600 dark:text-gray-400">"Duck off your Bill" savings</p>
               </div>
               
               <div className="space-y-4">
@@ -213,8 +213,8 @@ const HowItWorks: React.FC = () => {
                       {reward.icon}
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900">{reward.title}</h4>
-                      <p className="text-gray-600 text-sm">{reward.description}</p>
+                      <h4 className="font-semibold text-gray-900 dark:text-white">{reward.title}</h4>
+                      <p className="text-gray-600 dark:text-gray-400 text-sm">{reward.description}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -233,7 +233,7 @@ const HowItWorks: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               Good to Know 💡
             </h2>
           </motion.div>
@@ -244,8 +244,8 @@ const HowItWorks: React.FC = () => {
                 <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Clock size={32} className="text-white" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 text-gray-900">45-Day Validity</h3>
-                <p className="text-gray-600 text-sm">Business discounts are valid for up to 45 days from when you win your duck</p>
+                <h3 className="text-lg font-bold mb-3 text-gray-900 dark:text-white">45-Day Validity</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Business discounts are valid for up to 45 days from when you win your duck</p>
               </div>
             </AnimatedCard>
 
@@ -254,8 +254,8 @@ const HowItWorks: React.FC = () => {
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <MapPin size={32} className="text-white" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 text-gray-900">5-Mile Radius</h3>
-                <p className="text-gray-600 text-sm">Discounts are redeemable at businesses within 5 miles of where you played</p>
+                <h3 className="text-lg font-bold mb-3 text-gray-900 dark:text-white">5-Mile Radius</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Discounts are redeemable at businesses within 5 miles of where you played</p>
               </div>
             </AnimatedCard>
 
@@ -264,8 +264,8 @@ const HowItWorks: React.FC = () => {
                 <div className="w-16 h-16 bg-gradient-to-r from-duck-500 to-orange-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Smartphone size={32} className="text-white" />
                 </div>
-                <h3 className="text-lg font-bold mb-3 text-gray-900">Mobile App Required</h3>
-                <p className="text-gray-600 text-sm">Download our free app to scan ducks and manage your rewards</p>
+                <h3 className="text-lg font-bold mb-3 text-gray-900 dark:text-white">Mobile App Required</h3>
+                <p className="text-gray-600 dark:text-gray-400 text-sm">Download our free app to scan ducks and manage your rewards</p>
               </div>
             </AnimatedCard>
           </div>

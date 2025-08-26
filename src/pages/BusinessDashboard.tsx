@@ -56,7 +56,7 @@ const BusinessDashboard: React.FC = () => {
   const currentTier = 'trade' as 'basic' | 'trade' | 'custom' // TODO: Get from business data
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-duck-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-duck-50 dark:from-blue-900/20 dark:to-duck-900/20 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Business Header */}
         <motion.div
@@ -67,11 +67,11 @@ const BusinessDashboard: React.FC = () => {
         >
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center">
                 <Building className="mr-3" size={32} />
                 Business Dashboard
               </h1>
-              <p className="text-gray-600 mt-2">Manage your MyDuckRewards campaigns and track performance</p>
+              <p className="text-gray-600 dark:text-gray-400 mt-2">Manage your MyDuckRewards campaigns and track performance</p>
             </div>
             <div className={`px-4 py-2 rounded-full ${membershipTiers[currentTier].color} text-white font-medium`}>
               {membershipTiers[currentTier].name} Member
@@ -84,12 +84,12 @@ const BusinessDashboard: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start"
+            className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700 rounded-xl flex items-start"
           >
             <AlertCircle className="text-amber-500 mr-3 mt-0.5" size={20} />
             <div className="flex-1">
-              <p className="text-amber-800 font-medium">Verify your email to activate all features</p>
-              <p className="text-amber-700 text-sm mt-1">
+              <p className="text-amber-800 dark:text-amber-300 font-medium">Verify your email to activate all features</p>
+              <p className="text-amber-700 dark:text-amber-400 text-sm mt-1">
                 Check your inbox for a verification email. Campaign creation is limited until verification.
               </p>
             </div>
@@ -111,10 +111,10 @@ const BusinessDashboard: React.FC = () => {
                     <div className={`p-3 rounded-xl bg-gradient-to-r ${stat.color}`}>
                       <stat.icon className="text-white" size={24} />
                     </div>
-                    <ChevronRight className="text-gray-400" size={20} />
+                    <ChevronRight className="text-gray-400 dark:text-gray-500" size={20} />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
-                  <p className="text-sm text-gray-600 mt-1">{stat.label}</p>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{stat.label}</p>
                 </div>
               </AnimatedCard>
             </motion.div>
@@ -130,7 +130,7 @@ const BusinessDashboard: React.FC = () => {
               className={`px-4 py-2 rounded-lg font-medium transition-all flex items-center space-x-2 whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'bg-duck-500 text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <tab.icon size={18} />
@@ -147,27 +147,27 @@ const BusinessDashboard: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Quick Actions */}
                   <div>
-                    <h2 className="text-xl font-bold text-gray-900 mb-4">Quick Actions</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Quick Actions</h2>
                     <div className="space-y-3">
-                      <button className="w-full p-4 border border-gray-200 rounded-xl hover:border-duck-500 transition-colors text-left flex items-center">
+                      <button className="w-full p-4 border border-gray-200 dark:border-gray-600 rounded-xl hover:border-duck-500 dark:hover:border-duck-400 transition-colors text-left flex items-center bg-white dark:bg-gray-700">
                         <Send className="text-duck-500 mr-3" size={24} />
                         <div>
-                          <h4 className="font-medium text-gray-900">Send Duck Alert</h4>
-                          <p className="text-sm text-gray-600">Notify customers in your area</p>
+                          <h4 className="font-medium text-gray-900 dark:text-white">Send Duck Alert</h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">Notify customers in your area</p>
                         </div>
                       </button>
-                      <button className="w-full p-4 border border-gray-200 rounded-xl hover:border-duck-500 transition-colors text-left flex items-center">
+                      <button className="w-full p-4 border border-gray-200 dark:border-gray-600 rounded-xl hover:border-duck-500 dark:hover:border-duck-400 transition-colors text-left flex items-center bg-white dark:bg-gray-700">
                         <Target className="text-duck-500 mr-3" size={24} />
                         <div>
-                          <h4 className="font-medium text-gray-900">Create Campaign</h4>
-                          <p className="text-sm text-gray-600">Set up a new promotion</p>
+                          <h4 className="font-medium text-gray-900 dark:text-white">Create Campaign</h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">Set up a new promotion</p>
                         </div>
                       </button>
-                      <button className="w-full p-4 border border-gray-200 rounded-xl hover:border-duck-500 transition-colors text-left flex items-center">
+                      <button className="w-full p-4 border border-gray-200 dark:border-gray-600 rounded-xl hover:border-duck-500 dark:hover:border-duck-400 transition-colors text-left flex items-center bg-white dark:bg-gray-700">
                         <BarChart3 className="text-duck-500 mr-3" size={24} />
                         <div>
-                          <h4 className="font-medium text-gray-900">View Analytics</h4>
-                          <p className="text-sm text-gray-600">Track your performance</p>
+                          <h4 className="font-medium text-gray-900 dark:text-white">View Analytics</h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">Track your performance</p>
                         </div>
                       </button>
                     </div>
@@ -212,7 +212,7 @@ const BusinessDashboard: React.FC = () => {
                         <Calendar className="text-gray-400 mr-3" size={20} />
                         <div>
                           <p className="font-medium text-gray-900">Account Created</p>
-                          <p className="text-sm text-gray-600">Welcome to MyDuckRewards!</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">Welcome to MyDuckRewards!</p>
                         </div>
                       </div>
                       <span className="text-sm text-gray-500">Just now</span>
@@ -237,7 +237,7 @@ const BusinessDashboard: React.FC = () => {
               <div className="space-y-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-bold text-gray-900">Duck Alerts</h2>
-                  <div className="text-sm text-gray-600">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">
                     <span className="font-medium">2</span> alerts remaining
                   </div>
                 </div>
@@ -253,9 +253,9 @@ const BusinessDashboard: React.FC = () => {
                   </AnimatedButton>
                 </div>
 
-                <div className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-medium text-gray-900 mb-2">Alert History</h3>
-                  <p className="text-sm text-gray-600">No alerts sent yet</p>
+                <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-700">
+                  <h3 className="font-medium text-gray-900 dark:text-white mb-2">Alert History</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">No alerts sent yet</p>
                 </div>
               </div>
             )}
@@ -264,16 +264,16 @@ const BusinessDashboard: React.FC = () => {
               <div className="text-center py-12">
                 <BarChart3 className="mx-auto text-gray-300 mb-4" size={64} />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Analytics Coming Soon</h3>
-                <p className="text-gray-600">Track redemptions, customer engagement, and ROI</p>
+                <p className="text-gray-600 dark:text-gray-400">Track redemptions, customer engagement, and ROI</p>
               </div>
             )}
 
             {activeTab === 'settings' && (
               <div className="space-y-6">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Business Settings</h2>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Business Settings</h2>
                 <div className="space-y-4">
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <h3 className="font-medium text-gray-900 mb-2">Business Information</h3>
+                  <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-700">
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">Business Information</h3>
                     <div className="space-y-2 text-sm">
                       <p><span className="text-gray-600">Business Name:</span> Your Business</p>
                       <p><span className="text-gray-600">Contact Email:</span> {user?.email}</p>
@@ -281,8 +281,8 @@ const BusinessDashboard: React.FC = () => {
                     </div>
                   </div>
                   
-                  <div className="border border-gray-200 rounded-lg p-4">
-                    <h3 className="font-medium text-gray-900 mb-2">Duck Design</h3>
+                  <div className="border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-700">
+                    <h3 className="font-medium text-gray-900 dark:text-white mb-2">Duck Design</h3>
                     <p className="text-sm text-gray-600 mb-3">
                       {(() => {
                         switch(currentTier) {

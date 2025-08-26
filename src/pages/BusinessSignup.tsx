@@ -151,7 +151,7 @@ const BusinessSignup: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-duck-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-duck-50 dark:from-blue-900/20 dark:to-duck-900/20 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <motion.div
@@ -161,8 +161,8 @@ const BusinessSignup: React.FC = () => {
           transition={{ duration: 0.6 }}
         >
           <div className="text-6xl mb-4">🤝</div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Partner with MyDuckRewards</h2>
-          <p className="text-gray-600">Drive traffic and boost sales with our gamified platform</p>
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Partner with MyDuckRewards</h2>
+          <p className="text-gray-600 dark:text-gray-400">Drive traffic and boost sales with our gamified platform</p>
           <div className="mt-4 inline-flex items-center px-4 py-2 bg-duck-100 rounded-full text-sm font-medium text-duck-800">
             🎉 First 3 months FREE!
           </div>
@@ -171,12 +171,12 @@ const BusinessSignup: React.FC = () => {
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600">Step {step} of 3</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">Step {step} of 3</span>
             <span className="text-sm text-gray-600">
               {step === 1 ? 'Choose Plan' : step === 2 ? 'Business Info' : 'Account Setup'}
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2">
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
             <motion.div
               className="bg-gradient-to-r from-blue-500 to-duck-500 h-2 rounded-full"
               animate={{ width: `${(step / 3) * 100}%` }}
@@ -195,7 +195,7 @@ const BusinessSignup: React.FC = () => {
                 className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start"
               >
                 <AlertCircle className="text-red-500 mr-3 mt-0.5" size={20} />
-                <div className="text-red-700 text-sm">{error}</div>
+                <div className="text-red-700 dark:text-red-400 text-sm">{error}</div>
               </motion.div>
             )}
 
@@ -206,7 +206,7 @@ const BusinessSignup: React.FC = () => {
                 animate="visible"
                 className="space-y-6"
               >
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Choose Your Membership Plan</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Choose Your Membership Plan</h3>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {membershipPlans.map((plan) => (
@@ -229,10 +229,10 @@ const BusinessSignup: React.FC = () => {
                       )}
                       
                       <div className="text-center">
-                        <h4 className="text-lg font-bold text-gray-900">{plan.name}</h4>
-                        <p className="text-sm text-gray-500 mb-4">{plan.price} Billing</p>
+                        <h4 className="text-lg font-bold text-gray-900 dark:text-white">{plan.name}</h4>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{plan.price} Billing</p>
                         
-                        <ul className="space-y-2 text-sm text-gray-600 mb-6">
+                        <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400 mb-6">
                           {plan.features.map((feature, index) => (
                             <li key={index} className="flex items-center">
                               <CheckCircle size={16} className="text-green-500 mr-2" />
@@ -264,23 +264,23 @@ const BusinessSignup: React.FC = () => {
                 animate="visible"
                 className="space-y-6"
               >
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Business Information</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Business Information</h3>
                 
                 <form className="space-y-6">
                   {/* Business Name */}
                   <div>
-                    <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="businessName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Business Name
                     </label>
                     <div className="relative">
-                      <Building size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <Building size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                       <input
                         type="text"
                         id="businessName"
                         name="businessName"
                         value={formData.businessName}
                         onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                         placeholder="Your Business Name"
                         required
                       />
@@ -289,7 +289,7 @@ const BusinessSignup: React.FC = () => {
 
                   {/* Business Type */}
                   <div>
-                    <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Business Type
                     </label>
                     <div className="relative">
@@ -322,18 +322,18 @@ const BusinessSignup: React.FC = () => {
 
                   {/* Contact Name */}
                   <div>
-                    <label htmlFor="contactName" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="contactName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Contact Person
                     </label>
                     <div className="relative">
-                      <User size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <User size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                       <input
                         type="text"
                         id="contactName"
                         name="contactName"
                         value={formData.contactName}
                         onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                         placeholder="John Doe"
                         required
                       />
@@ -343,18 +343,18 @@ const BusinessSignup: React.FC = () => {
                   {/* Contact Info */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Business Email
                       </label>
                       <div className="relative">
-                        <Mail size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <Mail size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                         <input
                           type="email"
                           id="email"
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                           placeholder="business@example.com"
                           required
                         />
@@ -362,18 +362,18 @@ const BusinessSignup: React.FC = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="phone" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Phone Number
                       </label>
                       <div className="relative">
-                        <Phone size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                        <Phone size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                         <input
                           type="tel"
                           id="phone"
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
+                          className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                           placeholder="(555) 123-4567"
                           required
                         />
@@ -383,18 +383,18 @@ const BusinessSignup: React.FC = () => {
 
                   {/* Website */}
                   <div>
-                    <label htmlFor="website" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="website" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Website (Optional)
                     </label>
                     <div className="relative">
-                      <Globe size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <Globe size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                       <input
                         type="url"
                         id="website"
                         name="website"
                         value={formData.website}
                         onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                         placeholder="https://yourwebsite.com"
                       />
                     </div>
@@ -402,18 +402,18 @@ const BusinessSignup: React.FC = () => {
 
                   {/* Address */}
                   <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Business Address
                     </label>
                     <div className="relative">
-                      <MapPin size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <MapPin size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                       <input
                         type="text"
                         id="address"
                         name="address"
                         value={formData.address}
                         onChange={handleInputChange}
-                        className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                         placeholder="123 Main Street"
                         required
                       />
@@ -423,7 +423,7 @@ const BusinessSignup: React.FC = () => {
                   {/* City, State, Zip */}
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                     <div>
-                      <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="city" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         City
                       </label>
                       <input
@@ -432,14 +432,14 @@ const BusinessSignup: React.FC = () => {
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
+                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                         placeholder="Detroit"
                         required
                       />
                     </div>
 
                     <div>
-                      <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="state" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         State
                       </label>
                       <div className="relative">
@@ -472,7 +472,7 @@ const BusinessSignup: React.FC = () => {
                     </div>
 
                     <div>
-                      <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="zipCode" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                         Zip Code
                       </label>
                       <input
@@ -481,7 +481,7 @@ const BusinessSignup: React.FC = () => {
                         name="zipCode"
                         value={formData.zipCode}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
+                        className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                         placeholder="48201"
                         required
                       />
@@ -498,23 +498,23 @@ const BusinessSignup: React.FC = () => {
                 animate="visible"
                 className="space-y-6"
               >
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Create Your Account</h3>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Create Your Account</h3>
                 
                 <form className="space-y-6">
                   {/* Password */}
                   <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                       Password
                     </label>
                     <div className="relative">
-                      <Lock size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <Lock size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                       <input
                         type={showPassword ? "text" : "password"}
                         id="password"
                         name="password"
                         value={formData.password}
                         onChange={handleInputChange}
-                        className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
+                        className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
                         placeholder="Create a secure password"
                         required
                       />
@@ -540,7 +540,7 @@ const BusinessSignup: React.FC = () => {
                         className="h-4 w-4 text-duck-600 focus:ring-duck-500 border-gray-300 rounded mt-1"
                         required
                       />
-                      <label htmlFor="agreeToTerms" className="ml-2 block text-sm text-gray-700">
+                      <label htmlFor="agreeToTerms" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                         I agree to the{' '}
                         <Link to="/terms" className="text-duck-600 hover:text-duck-700 font-medium">
                           Terms of Service
@@ -561,7 +561,7 @@ const BusinessSignup: React.FC = () => {
                         onChange={handleInputChange}
                         className="h-4 w-4 text-duck-600 focus:ring-duck-500 border-gray-300 rounded mt-1"
                       />
-                      <label htmlFor="wantsMarketing" className="ml-2 block text-sm text-gray-700">
+                      <label htmlFor="wantsMarketing" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                         Send me partnership updates and marketing insights
                       </label>
                     </div>
@@ -607,7 +607,7 @@ const BusinessSignup: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Already have an account?{' '}
             <Link to="/signin" className="text-duck-600 hover:text-duck-700 font-medium">
               Sign in

@@ -51,13 +51,13 @@ const Business: React.FC = () => {
   ]
 
   return (
-    <div className="bg-white py-16">
+    <div className="bg-white dark:bg-gray-800 py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Partner with MyDuckRewards
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
             Drive foot traffic and increase sales with our innovative gamified marketing platform
           </p>
         </div>
@@ -106,8 +106,8 @@ const Business: React.FC = () => {
           })}
         </div>
 
-        <div className="bg-gray-50 rounded-lg p-8 mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-8 mb-12">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
             What You Get
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -116,37 +116,37 @@ const Business: React.FC = () => {
                 <Zap size={32} className="text-white" />
               </div>
               <h3 className="font-semibold mb-2">Instant Exposure</h3>
-              <p className="text-gray-600 text-sm">All machines in your zip code feature your offer on launch day</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">All machines in your zip code feature your offer on launch day</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-duck-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Mail size={32} className="text-white" />
               </div>
               <h3 className="font-semibold mb-2">Duck Alerts</h3>
-              <p className="text-gray-600 text-sm">Send targeted promotions directly to customers in your area</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">Send targeted promotions directly to customers in your area</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle size={32} className="text-white" />
               </div>
               <h3 className="font-semibold mb-2">Analytics</h3>
-              <p className="text-gray-600 text-sm">Track redemptions, customer demographics, and ROI</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">Track redemptions, customer demographics, and ROI</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Crown size={32} className="text-white" />
               </div>
               <h3 className="font-semibold mb-2">Social Media</h3>
-              <p className="text-gray-600 text-sm">Customers share photos with their ducks at your location</p>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">Customers share photos with their ducks at your location</p>
             </div>
           </div>
         </div>
 
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
             Ready to Join the Flock?
           </h2>
-          <p className="text-lg text-gray-600 mb-8">
+          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
             Contact us today to learn more about partnership opportunities
           </p>
           <button className="bg-duck-blue text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors mr-4">

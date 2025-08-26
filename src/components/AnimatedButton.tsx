@@ -22,12 +22,12 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   disabled = false,
   type = 'button'
 }) => {
-  const baseClasses = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed'
+  const baseClasses = 'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed'
   
   const variantClasses = {
-    primary: 'bg-gradient-to-r from-duck-500 to-orange-500 hover:from-duck-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl focus:ring-duck-300 hover:scale-105',
-    secondary: 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl focus:ring-blue-300 hover:scale-105',
-    outline: 'border-2 border-duck-500 text-duck-600 hover:bg-duck-500 hover:text-white focus:ring-duck-300 hover:scale-105'
+    primary: 'bg-gradient-to-r from-duck-500 to-orange-500 hover:from-duck-600 hover:to-orange-600 text-white shadow-lg hover:shadow-xl focus:ring-duck-300 dark:focus:ring-duck-700 hover:scale-105',
+    secondary: 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl focus:ring-blue-300 dark:focus:ring-blue-700 hover:scale-105',
+    outline: 'border-2 border-duck-500 dark:border-duck-400 text-duck-600 dark:text-duck-400 hover:bg-duck-500 dark:hover:bg-duck-400 hover:text-white dark:hover:text-gray-900 focus:ring-duck-300 dark:focus:ring-duck-700 hover:scale-105'
   }
   
   const sizeClasses = {

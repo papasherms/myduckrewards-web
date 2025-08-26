@@ -32,7 +32,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
   return (
     <motion.div
       ref={ref}
-      className={`bg-white rounded-2xl shadow-card hover:shadow-xl transition-all duration-300 ${hover ? 'hover:scale-105' : ''} ${className}`}
+      className={`bg-white dark:bg-gray-800 rounded-2xl shadow-card dark:shadow-none dark:border dark:border-gray-700 hover:shadow-xl dark:hover:border-gray-600 transition-all duration-300 ${hover ? 'hover:scale-105' : ''} ${className}`}
       initial={directionVariants[direction]}
       animate={inView ? { x: 0, y: 0, opacity: 1 } : directionVariants[direction]}
       transition={{ duration: 0.6, delay, ease: 'easeOut' }}

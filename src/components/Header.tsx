@@ -1,8 +1,9 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, User, Building, LogIn, LogOut, Settings, Shield } from 'lucide-react'
+import { Menu, X, User, Building, LogIn, LogOut, Settings, Shield, Sun, Moon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
+import { useTheme } from '../contexts/ThemeContext'
 import AnimatedButton from './AnimatedButton'
 
 const Header: React.FC = () => {
@@ -10,6 +11,7 @@ const Header: React.FC = () => {
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false)
   const location = useLocation()
   const { user, userProfile, signOut } = useAuth()
+  const { darkMode, toggleDarkMode } = useTheme()
   
   // Determine dashboard path based on user type
   const getDashboardPath = () => {
@@ -35,7 +37,7 @@ const Header: React.FC = () => {
   }
 
   return (
-    <header className="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-duck-200">
+    <header className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-duck-200 dark:border-gray-700 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
@@ -46,7 +48,7 @@ const Header: React.FC = () => {
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <div className="text-3xl mr-2">🦆</div>
-              <div className="text-2xl font-bold bg-gradient-to-r from-duck-600 to-orange-500 bg-clip-text text-transparent">
+              <div className="text-2xl font-bold bg-gradient-to-r from-duck-600 to-orange-500 bg-clip-text text-transparent dark:from-duck-400 dark:to-orange-400">
                 MyDuckRewards
               </div>
             </motion.div>
@@ -65,15 +67,15 @@ const Header: React.FC = () => {
                   to={item.path}
                   className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 relative ${
                     isActive(item.path)
-                      ? 'text-duck-600 bg-duck-50 shadow-sm'
-                      : 'text-gray-700 hover:text-duck-600 hover:bg-duck-50/50'
+                      ? 'text-duck-600 dark:text-duck-400 bg-duck-50 dark:bg-duck-900/30 shadow-sm'
+                      : 'text-gray-700 dark:text-gray-300 hover:text-duck-600 dark:hover:text-duck-400 hover:bg-duck-50/50 dark:hover:bg-duck-900/20'
                   }`}
                 >
                   {item.name}
                   {isActive(item.path) && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute inset-0 bg-duck-100 rounded-xl -z-10"
+                      className="absolute inset-0 bg-duck-100 dark:bg-duck-900/40 rounded-xl -z-10"
                       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />
                   )}
@@ -84,11 +86,20 @@ const Header: React.FC = () => {
 
           {/* Auth Section */}
           <div className="hidden lg:flex items-center space-x-3">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {darkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            
             {user ? (
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-duck-50 text-duck-700 hover:bg-duck-100 transition-colors"
+                  className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-duck-50 dark:bg-duck-900/30 text-duck-700 dark:text-duck-400 hover:bg-duck-100 dark:hover:bg-duck-900/50 transition-colors"
                 >
                   {userProfile?.user_type === 'admin' ? (
                     <Shield size={16} />
@@ -114,11 +125,11 @@ const Header: React.FC = () => {
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50"
+                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-2 z-50"
                     >
                       <Link
                         to={getDashboardPath()}
-                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                         onClick={() => setIsUserMenuOpen(false)}
                       >
                         <Settings size={16} className="mr-2" />
@@ -126,7 +137,7 @@ const Header: React.FC = () => {
                       </Link>
                       <button
                         onClick={handleSignOut}
-                        className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                        className="flex items-center w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
                       >
                         <LogOut size={16} className="mr-2" />
                         Sign Out
@@ -142,7 +153,7 @@ const Header: React.FC = () => {
                     variant="outline"
                     size="sm"
                     icon={<LogIn size={16} />}
-                    className="border-gray-300 text-gray-700 hover:border-duck-500 hover:text-duck-600 hover:bg-duck-50"
+                    className="border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-duck-500 dark:hover:border-duck-400 hover:text-duck-600 dark:hover:text-duck-400 hover:bg-duck-50 dark:hover:bg-duck-900/20"
                   >
                     Sign In
                   </AnimatedButton>
@@ -175,7 +186,7 @@ const Header: React.FC = () => {
 
           {/* Mobile menu button */}
           <button
-            className="lg:hidden p-2 rounded-xl hover:bg-gray-100 transition-colors"
+            className="lg:hidden p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <motion.div
@@ -211,8 +222,8 @@ const Header: React.FC = () => {
                         to={item.path}
                         className={`block px-4 py-3 rounded-xl text-base font-medium transition-colors ${
                           isActive(item.path)
-                            ? 'text-duck-600 bg-duck-50'
-                            : 'text-gray-700 hover:text-duck-600 hover:bg-duck-50/50'
+                            ? 'text-duck-600 dark:text-duck-400 bg-duck-50 dark:bg-duck-900/30'
+                            : 'text-gray-700 dark:text-gray-300 hover:text-duck-600 dark:hover:text-duck-400 hover:bg-duck-50/50 dark:hover:bg-duck-900/20'
                         }`}
                         onClick={() => setIsMenuOpen(false)}
                       >
@@ -223,13 +234,13 @@ const Header: React.FC = () => {
                 </div>
 
                 {/* Mobile Auth Section */}
-                <div className="pt-4 space-y-3 border-t border-gray-200">
+                <div className="pt-4 space-y-3 border-t border-gray-200 dark:border-gray-700">
                   {user ? (
                     <>
                       <Link 
                         to={getDashboardPath()} 
                         onClick={() => setIsMenuOpen(false)}
-                        className="block px-4 py-3 rounded-xl bg-duck-50 text-duck-700 text-center font-medium"
+                        className="block px-4 py-3 rounded-xl bg-duck-50 dark:bg-duck-900/30 text-duck-700 dark:text-duck-400 text-center font-medium"
                       >
                         <div className="flex items-center justify-center space-x-2">
                           {userProfile?.user_type === 'admin' ? (
@@ -247,7 +258,7 @@ const Header: React.FC = () => {
                           handleSignOut()
                           setIsMenuOpen(false)
                         }}
-                        className="w-full px-4 py-3 rounded-xl bg-red-50 text-red-600 text-center font-medium flex items-center justify-center space-x-2"
+                        className="w-full px-4 py-3 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-center font-medium flex items-center justify-center space-x-2"
                       >
                         <LogOut size={18} />
                         <span>Sign Out</span>
@@ -260,7 +271,7 @@ const Header: React.FC = () => {
                           variant="outline"
                           size="md"
                           icon={<LogIn size={18} />}
-                          className="w-full justify-center border-gray-300 text-gray-700"
+                          className="w-full justify-center border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300"
                         >
                           Sign In
                         </AnimatedButton>

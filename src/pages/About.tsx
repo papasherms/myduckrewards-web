@@ -57,7 +57,7 @@ const About: React.FC = () => {
   ]
 
   return (
-    <div className="bg-white overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 overflow-hidden">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-duck-400 via-duck-500 to-orange-500 text-white py-20 lg:py-32">
         {/* Animated Background Elements */}
@@ -101,10 +101,10 @@ const About: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               Our Mission 🎯
             </h2>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-4xl mx-auto leading-relaxed">
               MyDuckRewards (MDR) is a revolutionary marketing company that combines the excitement 
               of claw machine games with valuable local business rewards. Our unique approach gives 
               customers both instant gratification and long-term savings opportunities.
@@ -113,10 +113,10 @@ const About: React.FC = () => {
 
           <AnimatedCard className="p-8 lg:p-12 text-center bg-gradient-to-br from-duck-50 to-blue-50 border-2 border-duck-200">
             <div className="text-6xl mb-6">🤝</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Creating Meaningful Connections
             </h3>
-            <p className="text-lg text-gray-700 max-w-3xl mx-auto">
+            <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
               We connect consumers and local businesses through innovative, engaging reward systems 
               that benefit entire communities. Using our customized claw machines and collectible ducks, 
               we capture customer engagement while delivering real value through our "Duck off your Bill" program.
@@ -126,7 +126,7 @@ const About: React.FC = () => {
       </section>
 
       {/* What Makes Us Different */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
@@ -134,10 +134,10 @@ const About: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               How We're Different ✨
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 dark:text-gray-400">
               What sets MyDuckRewards apart from traditional marketing platforms
             </p>
           </motion.div>
@@ -152,8 +152,8 @@ const About: React.FC = () => {
                     </div>
                     <div className="absolute -top-2 -right-2 text-2xl">{feature.emoji}</div>
                   </div>
-                  <h3 className="text-lg font-bold mb-3 text-gray-900">{feature.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">{feature.description}</p>
+                  <h3 className="text-lg font-bold mb-3 text-gray-900 dark:text-white">{feature.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{feature.description}</p>
                 </div>
               </AnimatedCard>
             ))}
@@ -170,10 +170,10 @@ const About: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               Our Expansion Journey 🗺️
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-xl text-gray-600 dark:text-gray-400">
               From Southeast Michigan to nationwide presence
             </p>
           </motion.div>
@@ -190,8 +190,8 @@ const About: React.FC = () => {
                       {item.phase}
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-4 text-gray-900">{item.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">{item.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{item.description}</p>
                 </div>
               </AnimatedCard>
             ))}
@@ -200,7 +200,7 @@ const About: React.FC = () => {
       </section>
 
       {/* Values Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-duck-50">
+      <section className="py-20 bg-gradient-to-br from-blue-50 to-duck-50 dark:from-blue-900/20 dark:to-duck-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
@@ -208,7 +208,7 @@ const About: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               Our Core Values 💫
             </h2>
           </motion.div>
@@ -222,8 +222,8 @@ const About: React.FC = () => {
                   </div>
                 </div>
                 <div className="ml-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Community First</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Community First</h3>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                     We believe in strengthening local communities by connecting neighbors with 
                     local businesses and creating shared experiences.
                   </p>
@@ -239,8 +239,8 @@ const About: React.FC = () => {
                   </div>
                 </div>
                 <div className="ml-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Fair & Transparent</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Fair & Transparent</h3>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                     Every play wins, every business gets value, and every customer saves money. 
                     No hidden fees, no false promises.
                   </p>
@@ -256,8 +256,8 @@ const About: React.FC = () => {
                   </div>
                 </div>
                 <div className="ml-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Innovation Driven</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Innovation Driven</h3>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                     We constantly evolve our platform with new features, better technology, 
                     and creative ways to surprise and delight our users.
                   </p>
@@ -273,8 +273,8 @@ const About: React.FC = () => {
                   </div>
                 </div>
                 <div className="ml-6">
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">Fun & Meaningful</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">Fun & Meaningful</h3>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
                     We make saving money enjoyable while creating real value for businesses 
                     and genuine savings for customers.
                   </p>

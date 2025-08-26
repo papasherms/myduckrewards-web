@@ -28,7 +28,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="bg-white overflow-hidden">
+    <div className="bg-white dark:bg-gray-800 overflow-hidden">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-duck-400 via-duck-500 to-orange-500 text-white py-20 lg:py-32">
         {/* Animated Background Elements */}
@@ -119,7 +119,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-gray-50">
+      <section className="py-16 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {[
@@ -132,7 +132,7 @@ const Home: React.FC = () => {
                 <div className="p-6 text-center">
                   <div className="text-4xl mb-2">{stat.icon}</div>
                   <div className="text-3xl font-bold text-duck-600 mb-1">{stat.number}</div>
-                  <div className="text-gray-600 font-medium">{stat.label}</div>
+                  <div className="text-gray-600 dark:text-gray-400 font-medium">{stat.label}</div>
                 </div>
               </AnimatedCard>
             ))}
@@ -150,10 +150,10 @@ const Home: React.FC = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
               Duck Off Your Bill! 🦆💸
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
               Every duck you win comes with instant rewards and local business discounts
             </p>
           </motion.div>
@@ -190,8 +190,8 @@ const Home: React.FC = () => {
                     </div>
                     <div className="absolute -top-2 -right-2 text-2xl">{feature.emoji}</div>
                   </div>
-                  <h3 className="text-xl font-bold mb-4 text-gray-900">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
+                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">{feature.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{feature.description}</p>
                 </div>
               </AnimatedCard>
             ))}
@@ -200,7 +200,7 @@ const Home: React.FC = () => {
       </section>
 
       {/* How It Works Preview */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-duck-50">
+      <section className="py-20 bg-gradient-to-br from-blue-50 to-duck-50 dark:from-blue-900/20 dark:to-duck-900/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
@@ -208,10 +208,10 @@ const Home: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
               Simple as 1, 2, 3! ✨
             </h2>
-            <p className="text-xl text-gray-600">Start your duck collection journey today</p>
+            <p className="text-xl text-gray-600 dark:text-gray-400">Start your duck collection journey today</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
@@ -228,12 +228,12 @@ const Home: React.FC = () => {
                     </div>
                     <div className="absolute -top-2 -right-2 text-3xl">{item.emoji}</div>
                   </div>
-                  <h3 className="text-xl font-bold mb-4 text-gray-900">{item.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{item.description}</p>
+                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">{item.title}</h3>
+                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">{item.description}</p>
                   
                   {index < 2 && (
                     <div className="hidden md:block absolute top-1/2 -right-4 lg:-right-6">
-                      <ArrowRight className="w-8 h-8 text-gray-300" />
+                      <ArrowRight className="w-8 h-8 text-gray-300 dark:text-gray-600" />
                     </div>
                   )}
                 </div>
