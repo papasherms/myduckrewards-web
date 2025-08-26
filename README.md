@@ -1,292 +1,278 @@
-# MyDuckRewards Web Application
+# 🦆 MyDuckRewards
 
-A modern React-based web application for the MyDuckRewards gamified local business rewards platform.
+A loyalty rewards platform that transforms collecting rubber ducks from claw machines into valuable local business discounts and instant prizes.
 
-## 🚀 Current Status - BACKEND CONNECTED & FUNCTIONAL
+## 🚀 Live Site
 
-**Latest Updates (August 2025):**
-- ✅ Modern animated homepage with Framer Motion
-- ✅ Complete user authentication flows (Customer & Business signup/signin)
-- ✅ All pages fully styled and responsive
-- ✅ Professional business partnership flow
-- ✅ Animated components and micro-interactions
-- ✅ Duck-themed design system implemented
-- ✅ **Supabase backend fully integrated**
-- ✅ **Database schema created and deployed**
-- ✅ **Authentication system connected**
-- ✅ **User registration and login working**
+**Production URL:** [https://myduckrewards.com](https://myduckrewards.com)  
+**Deployment:** AWS Amplify with GitHub CI/CD
 
-**Development Server:** Currently running at `http://localhost:5173`
-**Backend:** Supabase PostgreSQL database with Row Level Security
+## 📊 Project Status (December 2024)
 
-## 🦆 About MyDuckRewards
+### ✅ Fully Implemented Features
 
-MyDuckRewards combines the excitement of claw machine games with valuable local business rewards. Players win collectible ducks that contain both instant gratification and location-based business discounts within a 5-mile radius.
+- **Complete Authentication System**
+  - Customer registration and login
+  - Business partnership applications with approval workflow
+  - Admin user management
+  - Email verification
+  - Password reset functionality
+  - Session management with Supabase Auth
 
-**Business Model:**
-- Physical claw machines at Leo's locations (Southeast Michigan)
-- Every play wins a collectible duck with rewards
-- Three membership tiers for businesses (Basic, Trade, Custom)
-- "Duck off your Bill" savings program for customers
-- Duck Alerts for targeted business marketing
+- **Three Dashboard Types**
+  - **Customer Dashboard**: Collection tracking, redemptions, profile management
+  - **Business Dashboard**: Analytics, Duck Alerts, location management
+  - **Admin Dashboard**: User/business/location management, approval system
+
+- **Business Approval Workflow**
+  - Businesses submit applications (pending status)
+  - Admin reviews and approves/rejects
+  - Approved businesses gain dashboard access
+  - Email notifications on status change
+
+- **Dark/Light Mode**
+  - System-wide theme toggle
+  - Persistent preference (localStorage)
+  - Optimized contrast for all components
+
+- **Profile Management**
+  - First-time login redirect to profile completion
+  - Profile completion percentage tracking
+  - Editable user information
+  - Address and contact details
+
+- **Location System**
+  - Interactive location search by ZIP
+  - Geolocation support
+  - Location cards with directions
+  - Machine capacity tracking
+
+- **Responsive Design**
+  - Mobile-optimized UI
+  - Tablet and desktop layouts
+  - Animated components with Framer Motion
+  - Custom duck-themed styling
 
 ## 🛠 Tech Stack
 
-- **Frontend:** React 18 with TypeScript
-- **Backend:** Supabase (PostgreSQL + Auth + Real-time)
-- **Build Tool:** Vite (fast HMR)
-- **Styling:** Tailwind CSS with custom design system
-- **Animations:** Framer Motion + React Intersection Observer
-- **Routing:** React Router v6
-- **Icons:** Lucide React + Heroicons
-- **Package Manager:** npm
-- **Database:** PostgreSQL with Row Level Security (RLS)
+- **Frontend**: React 18 + TypeScript + Vite
+- **Styling**: Tailwind CSS with custom theme
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Deployment**: AWS Amplify
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+
+## 🗄 Database Setup
+
+### Fresh Supabase Project Setup
+
+1. Create a new Supabase project at [supabase.com](https://supabase.com)
+
+2. Go to SQL Editor and run the complete setup script:
+   ```sql
+   -- Run the contents of complete-database-setup.sql
+   ```
+
+3. This creates:
+   - 7 tables (users, businesses, locations, ducks, etc.)
+   - Row Level Security policies
+   - Helper functions and triggers
+   - Sample location data
+
+### Create Your First Admin User
+
+1. Sign up through the app as a regular user
+2. Go to Supabase Dashboard → Table Editor → `users` table
+3. Find your user and change `user_type` from 'customer' to 'admin'
+4. You now have full admin access
+
+## 🚀 Local Development
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Supabase account
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/myduckrewards-web.git
+cd myduckrewards-web
+
+# Install dependencies
+npm install
+
+# Create .env file with your Supabase credentials
+echo "VITE_SUPABASE_URL=your_supabase_url" > .env
+echo "VITE_SUPABASE_ANON_KEY=your_anon_key" >> .env
+
+# Start development server
+npm run dev
+```
+
+### Available Scripts
+
+```bash
+npm run dev       # Start development server
+npm run build     # Build for production
+npm run preview   # Preview production build
+npm run lint      # Run ESLint
+npm run type-check # Run TypeScript checks
+```
 
 ## 📁 Project Structure
 
 ```
-myduckrewards-web/
-├── docs/                    # 📋 Project documentation
-│   └── marketing-narrative.md  # Complete business concept & strategy
-├── public/                  # 🌐 Static assets
-│   └── vite.svg            # Vite logo
-├── src/                    # 💻 Source code
-│   ├── components/         # 🧩 Reusable UI components
-│   │   ├── AnimatedButton.tsx    # Animated button with variants
-│   │   ├── AnimatedCard.tsx      # Card with scroll animations
-│   │   ├── Footer.tsx           # Site footer with links
-│   │   └── Header.tsx           # Navigation + auth state
-│   ├── contexts/          # ⚛️ React Context providers
-│   │   └── AuthContext.tsx      # Authentication state management
-│   ├── lib/              # 🔧 External integrations  
-│   │   └── supabase.ts         # Supabase client + helpers
-│   ├── pages/            # 📄 Route-based components
-│   │   ├── About.tsx           # Company story (animated)
-│   │   ├── Business.tsx        # B2B partnerships & pricing
-│   │   ├── BusinessSignup.tsx   # 3-step business onboarding ⚠️
-│   │   ├── Contact.tsx         # Contact form + info ⚠️
-│   │   ├── CustomerSignup.tsx   # Customer registration ✅
-│   │   ├── Home.tsx            # Landing page with hero
-│   │   ├── HowItWorks.tsx      # Process explanation  
-│   │   └── SignIn.tsx          # Authentication ✅
-│   ├── types/           # 📝 TypeScript definitions
-│   │   └── auth.ts           # User & auth interfaces
-│   ├── App.tsx         # 🏠 Main app with routing
-│   ├── index.css       # 🎨 Global styles + Tailwind
-│   └── main.tsx        # ⚡ Application entry point
-├── CLAUDE.md           # 🤖 Claude session context
-├── README.md           # 📖 Project overview & setup
-├── database-schema.sql # 🗄️ Complete Supabase schema
-├── package.json        # 📦 Dependencies & scripts
-└── Configuration files # ⚙️ Vite, Tailwind, TypeScript, etc.
+src/
+├── components/        # Reusable UI components
+│   ├── AdminModals.tsx   # Admin CRUD modals
+│   ├── AnimatedButton.tsx
+│   ├── AnimatedCard.tsx
+│   ├── Header.tsx
+│   └── Footer.tsx
+├── contexts/         # React contexts
+│   ├── AuthContext.tsx   # Authentication state
+│   └── ThemeContext.tsx  # Dark/light mode
+├── pages/           # Route components
+│   ├── SignIn.tsx
+│   ├── CustomerSignup.tsx
+│   ├── BusinessSignup.tsx
+│   ├── ForgotPassword.tsx
+│   ├── CustomerDashboard.tsx
+│   ├── BusinessDashboard.tsx
+│   ├── AdminDashboard.tsx
+│   ├── Locations.tsx
+│   └── [other pages]
+├── lib/             # External service configs
+│   └── supabase.ts
+├── types/           # TypeScript definitions
+│   └── auth.ts
+├── hooks/           # Custom React hooks
+│   └── usePageTitle.ts
+└── App.tsx          # Main app component
 ```
 
-### Status Legend
-- ✅ **Fully Connected**: Working with Supabase backend
-- ⚠️ **Needs Connection**: UI complete, backend integration pending
-- 📋 **Documentation**: Reference materials and guides
+## 🔐 Authentication Flow
 
-## 🎨 Design System
+1. **Customer Registration**
+   - Fill out form → Create auth account → Auto-create user profile
+   - Email verification sent
+   - First login redirects to profile completion
 
-### Custom Color Palette
-```css
-Duck Yellow: #FFD43B (Primary brand)
-Duck Orange: #F97316 (Secondary accent) 
-Duck Blue: #3B82F6 (Actions/links)
-Success: #10B981
-Warning: #F59E0B
-Error: #EF4444
+2. **Business Registration**
+   - Submit partnership application → Status: "pending"
+   - Admin reviews application
+   - If approved → Business can access dashboard
+   - If rejected → Reason provided, can reapply
+
+3. **Admin Access**
+   - Regular user signup → Manual promotion to admin
+   - Full system management capabilities
+   - Approve/reject businesses
+   - Manage users and locations
+
+## 🎨 Features Overview
+
+### For Customers
+- Track duck collection
+- View and redeem rewards
+- Find nearby locations
+- Manage profile
+- Receive Duck Alerts
+
+### For Businesses
+- Submit partnership applications
+- Send Duck Alerts to customers
+- View analytics dashboard
+- Manage reward campaigns
+- Track redemptions
+
+### For Admins
+- Approve/reject business applications
+- Manage all users
+- Add/edit locations
+- System-wide analytics
+- Database management
+
+## 🚢 Deployment
+
+The app is deployed on AWS Amplify with automatic CI/CD from GitHub.
+
+### Deploy Your Own
+
+1. Fork this repository
+2. Set up AWS Amplify
+3. Connect your GitHub repository
+4. Add environment variables:
+   ```
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_anon_key
+   ```
+5. Deploy!
+
+## 📝 Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-### Animations & Interactions
-- **Scroll-triggered animations** with Intersection Observer
-- **Micro-interactions** on all buttons and cards
-- **Floating elements** and background animations
-- **Smooth page transitions** and hover effects
-- **Mobile-responsive** gesture support
+## 🧪 Testing
 
-### Typography
-- **Font Family:** Inter (system fallback)
-- **Responsive sizing:** Mobile-first approach
-- **Consistent hierarchy:** H1-H6 with proper spacing
+### Test Accounts
 
-## 🚀 Quick Start
+After setting up your database, create test accounts:
 
-### Prerequisites
-- Node.js v18+ 
-- npm v8+
+1. **Customer**: Regular signup flow
+2. **Business**: Partnership application → Admin approval
+3. **Admin**: Regular signup → Manual role change in database
 
-### Development Setup
-```bash
-# Navigate to project directory
-cd myduckrewards-web
+### Key User Flows to Test
 
-# Install dependencies (if not already installed)
-npm install
+1. Complete customer registration and profile
+2. Submit business application and approval process
+3. Admin dashboard functionality
+4. Dark/light mode toggle
+5. Location search
+6. Password reset
 
-# Start development server
-npm run dev
+## 🤝 Contributing
 
-# Open browser to http://localhost:5173
-```
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Build Commands
-```bash
-# Production build
-npm run build
+## 📄 License
 
-# Preview production build locally
-npm run preview
+This project is proprietary and confidential.
 
-# Build and serve for Go Live extension
-npm run build
-# Then use VS Code Go Live extension on the /dist folder
-```
+## 🆘 Support
 
-## 🔧 Development Notes
+For issues or questions, please contact the development team.
 
-### Known Working Features
-- All page routing functional
-- Responsive design tested on mobile/tablet/desktop
-- Form validation and user flows
-- Animation performance optimized
-- TypeScript strict mode enabled
-- Hot module reloading working
+## 🎯 Roadmap
 
-### Architecture Decisions
-- **Component-based:** Reusable AnimatedButton/AnimatedCard
-- **Type-safe:** Full TypeScript implementation
-- **Performance:** Framer Motion with intersection observers
-- **Scalable:** Ready for backend API integration
-- **Accessible:** Semantic HTML and ARIA compliance
+### Coming Soon
+- [ ] Payment processing (Stripe integration)
+- [ ] Real-time Duck Alert notifications
+- [ ] Mobile app (React Native)
+- [ ] Advanced analytics dashboard
+- [ ] QR code scanning for duck collection
+- [ ] Social features (leaderboards, sharing)
 
-## 📱 User Flows Implemented
-
-### Customer Journey
-1. **Landing Page** → Learn about concept
-2. **How It Works** → Understand process  
-3. **Customer Signup** → 2-step registration
-4. **Sign In** → Authentication with social options
-
-### Business Journey  
-1. **Business Page** → View membership tiers
-2. **Business Signup** → 3-step onboarding (Plan → Info → Account)
-3. **Partnership Dashboard** → (Ready for backend integration)
-
-## 🎯 Current Implementation Status
-
-### ✅ Completed Features
-- **Frontend:** All pages styled and animated
-- **Database:** Complete schema deployed to Supabase
-- **Authentication:** User registration and login working
-- **Customer Flow:** Signup → Email verification → Login
-- **User Management:** Context, profiles, session handling
-- **Security:** Row Level Security policies implemented
-- **UI/UX:** Responsive design, error handling, loading states
-
-### ⚠️ Needs Connection
-- **Business Signup Form:** Connect to Supabase (form exists, needs backend)
-- **Contact Form:** Connect to database or email service
-- **Business Dashboard:** Create authenticated business area
-- **Customer Dashboard:** Create authenticated customer area
-
-### 🔄 Next Development Priorities
-- Business signup form Supabase integration
-- User dashboards (customer and business)
-- Duck inventory management system
-- Payment processing (Stripe integration)  
-- Duck Alert creation and management
-- QR code scanning for duck redemption
-
-### Mobile App Companion
-- React Native codebase (shared components)
-- QR code scanning for duck redemption
-- Location-based services
-- Push notifications
-
-### Business Dashboard
-- Analytics and reporting
-- Duck Alert management
-- Customer demographics
-- ROI tracking
-
-## 🏗 Infrastructure Ready For
-
-### Deployment Options
-- **Vercel** (Recommended - zero config)
-- **Netlify** (Static hosting + forms)
-- **AWS S3 + CloudFront** (Enterprise scale)
-- **GitHub Pages** (Simple hosting)
-
-### Backend - Supabase (✅ IMPLEMENTED)
-- **Database:** PostgreSQL with 7 tables (users, businesses, ducks, etc.)
-- **Authentication:** Email/password + social login ready
-- **API:** Auto-generated REST + GraphQL endpoints
-- **Security:** Row Level Security policies implemented
-- **Real-time:** Ready for live updates
-
-## 📞 Development Support
-
-**Current Status:** Frontend + Backend integrated, user authentication working
-**Performance:** Lighthouse score 95+ on all metrics
-**Browser Support:** Modern browsers (ES6+)
-**Mobile:** Fully responsive, touch-optimized
-**Database:** Live Supabase PostgreSQL with real user data
-
-### 🧪 Testing the Application
-1. **Start Development:** `npm run dev` → http://localhost:5173
-2. **Create Account:** Use Customer Signup form
-3. **Verify in Database:** Check Supabase dashboard → Authentication → Users
-4. **Sign In:** Use the credentials you just created
-5. **Check UI:** Header should show user menu when logged in
-
-### 🚨 Important Notes for Future Sessions
-- **Supabase Project:** rmqnqpuuisirtrdxtvni.supabase.co
-- **Database Schema:** Already deployed (see database-schema.sql)
-- **Auth Working:** Customer signup + signin fully functional
-- **Next Priority:** Connect Business signup form to Supabase
-
-For questions about the codebase architecture, styling system, or component usage, refer to the individual component files which include inline documentation.
-
-## 🔗 Version Control Setup
-
-### Repository Structure Ready
-The project is organized and ready for GitHub integration:
-
-```bash
-# Initialize Git repository
-git init
-
-# Add all files (respecting .gitignore)
-git add .
-
-# Create initial commit
-git commit -m "Initial commit: MyDuckRewards web app with Supabase backend
-
-✅ Frontend: Complete React app with animations
-✅ Backend: Supabase integration with auth
-✅ Database: Full schema with 7 tables + RLS
-✅ Documentation: Marketing narrative + technical guides"
-
-# Add GitHub repository and push
-git remote add origin https://github.com/[username]/myduckrewards-web.git
-git branch -M main
-git push -u origin main
-```
-
-### Files Included in Repo
-- ✅ **Source Code**: All React components, pages, contexts
-- ✅ **Configuration**: Vite, Tailwind, TypeScript configs  
-- ✅ **Documentation**: README, CLAUDE.md, marketing narrative
-- ✅ **Database Schema**: Complete SQL for deployment
-- ✅ **Dependencies**: package.json with all required packages
-
-### Files Excluded (via .gitignore)
-- ❌ **node_modules/**: Dependencies (installed via npm)
-- ❌ **dist/**: Build outputs
-- ❌ **.env files**: Environment variables (keep local)
-- ❌ **OS files**: .DS_Store, etc.
+### Future Enhancements
+- [ ] Multi-language support
+- [ ] Franchise management system
+- [ ] API for third-party integrations
+- [ ] Automated email campaigns
+- [ ] Reward marketplace
 
 ---
 
-**🦆 Ready to make some ducks and save some bucks! 🦆**
+**MyDuckRewards** - Transforming local marketing through collectible rewards 🦆

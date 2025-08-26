@@ -6,6 +6,7 @@ import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
 import { useAuth } from '../contexts/AuthContext'
 import { createBusiness } from '../lib/supabase'
+import { createBusinessApplicationRPC } from '../lib/supabase-business-fix'
 import usePageTitle from '../hooks/usePageTitle'
 
 const BusinessSignup: React.FC = () => {
@@ -109,12 +110,14 @@ const BusinessSignup: React.FC = () => {
         }
 
         if (signUpResult.data?.user) {
-          // Step 2: Create the business record
-          const businessResult = await createBusiness({
+          // Step 2: Create the business record using RPC to avoid RLS issues
+          const contactNameParts = formData.contactName.split(' ')
+          const businessResult = await createBusinessApplicationRPC({
             user_id: signUpResult.data.user.id,
             business_name: formData.businessName,
             business_type: formData.businessType,
-            contact_name: formData.contactName,
+            owner_first_name: contactNameParts[0] || '',
+            owner_last_name: contactNameParts.slice(1).join(' ') || '',
             email: formData.email,
             phone: formData.phone,
             website: formData.website,
@@ -122,12 +125,7 @@ const BusinessSignup: React.FC = () => {
             city: formData.city,
             state: formData.state,
             zip_code: formData.zipCode,
-            membership_tier: selectedPlan,
-            membership_start_date: new Date().toISOString().split('T')[0], // Just date, no time
-            membership_end_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 months free
-            duck_alerts_remaining: selectedPlan === 'custom' ? 4 : selectedPlan === 'trade' ? 2 : 1,
-            is_active: false, // Will be activated after admin approval
-            approval_status: 'pending'
+            membership_tier: selectedPlan
           })
 
           if (businessResult.error) {
@@ -172,21 +170,23 @@ const BusinessSignup: React.FC = () => {
         </motion.div>
 
         {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Step {step} of 3</span>
-            <span className="text-sm text-gray-600">
-              {step === 1 ? 'Choose Plan' : step === 2 ? 'Business Info' : 'Account Setup'}
-            </span>
+        {step < 4 && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Step {step} of 3</span>
+              <span className="text-sm text-gray-600">
+                {step === 1 ? 'Choose Plan' : step === 2 ? 'Business Info' : 'Account Setup'}
+              </span>
+            </div>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+              <motion.div
+                className="bg-gradient-to-r from-blue-500 to-duck-500 h-2 rounded-full"
+                animate={{ width: `${Math.min((step / 3) * 100, 100)}%` }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <motion.div
-              className="bg-gradient-to-r from-blue-500 to-duck-500 h-2 rounded-full"
-              animate={{ width: `${(step / 3) * 100}%` }}
-              transition={{ duration: 0.5 }}
-            />
-          </div>
-        </div>
+        )}
 
         <AnimatedCard>
           <div className="p-8">

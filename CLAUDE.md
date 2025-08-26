@@ -2,145 +2,323 @@
 
 *This file contains detailed context for future Claude sessions to continue development seamlessly.*
 
-## 📊 Current Project Status (August 2025)
+## 📊 Current Project Status (December 2024)
 
-### ✅ COMPLETED - Fully Working
-- **Frontend Framework**: React 18 + TypeScript + Vite
-- **Styling System**: Tailwind CSS with custom duck theme
-- **Animations**: Framer Motion with scroll triggers
-- **Routing**: React Router v6 with all pages
-- **Component Library**: AnimatedButton, AnimatedCard, Header, Footer
-- **Database Schema**: PostgreSQL schema deployed to Supabase
-- **Authentication Backend**: Supabase auth fully integrated
-- **Customer Registration**: Working signup form → database
-- **Business Registration**: Connected to Supabase with membership tiers
-- **User Login**: Working signin form → session management
-- **Header UI**: Shows user menu when authenticated, routes by user type
-- **Security**: Row Level Security (RLS) policies implemented
-- **Dashboard Pages**: Customer, Business, and Admin dashboards created
+### 🌐 Live Production Site
+- **URL**: https://myduckrewards.com
+- **Deployment**: AWS Amplify with GitHub CI/CD
+- **Repository**: GitHub (private repo)
+- **Domain**: Custom domain configured
 
-### ⚠️ PARTIALLY COMPLETE - Needs Connection
-- **Contact Form**: Static form, needs backend/email service
-- **Dashboard Features**: Static UI, needs real data integration
+### ✅ COMPLETED - Fully Working Features
 
-### 🔄 TODO - Next Priorities
-1. Fetch and display real data in dashboards
-2. Implement duck management system
-3. Create Duck Alert functionality
-4. Add payment processing (Stripe)
-5. Connect contact form to email service
+#### Authentication System
+- **Customer Registration**: Full signup flow with email verification
+- **Business Registration**: Application workflow with admin approval
+- **Admin Users**: Manual promotion from regular users
+- **Password Reset**: Forgot password flow with email
+- **Session Management**: Persistent login with Supabase Auth
+- **User Routing**: Automatic routing based on user_type (customer/business/admin)
 
-## 🗄️ Database Structure
+#### Dashboard System
+- **Customer Dashboard** (`/dashboard/customer`)
+  - Profile management with completion tracking
+  - Duck collection display
+  - Redemption history
+  - Editable user information
+  
+- **Business Dashboard** (`/dashboard/business`)
+  - Analytics overview
+  - Duck Alert creation
+  - Location management
+  - Campaign tracking
+  
+- **Admin Dashboard** (`/dashboard/admin`)
+  - User management with CRUD modals
+  - Business approval/rejection workflow
+  - Location management
+  - System statistics
+  - Admin profile editing
 
-### Supabase Project Details
-- **URL**: rmqnqpuuisirtrdxtvni.supabase.co
-- **Status**: Live with complete schema deployed
-- **Schema File**: `database-schema.sql` (run successfully)
+#### Business Approval Workflow
+```typescript
+// Business signup creates pending application
+approval_status: 'pending'
+is_active: false
 
-### Tables Created
-1. **users** - User profiles (extends auth.users)
-2. **businesses** - Business partnerships 
+// Admin approves → Business can login
+approval_status: 'approved'
+is_active: true
+approved_at: timestamp
+approved_by: admin_user_id
+
+// Admin rejects → Business shown reason
+approval_status: 'rejected'
+rejection_reason: text
+```
+
+#### Dark/Light Mode
+- **Implementation**: ThemeContext with localStorage
+- **Toggle Location**: Header navigation
+- **Coverage**: All components properly styled
+- **Persistence**: Saves user preference
+
+#### Profile Management
+- **First-Time Flow**: Redirects to profile completion
+- **Progress Tracking**: Shows completion percentage
+- **Required Fields**: First name, last name, phone, address
+- **Validation**: Form validation with error messages
+
+#### Location System
+- **Search**: By ZIP code or current location
+- **Pre-fill**: Uses user's saved ZIP if available
+- **Cards**: Interactive with Google Maps integration
+- **Capacity**: Shows duck inventory per machine
+
+#### Component Library
+- **AnimatedButton**: Multiple variants (primary/secondary/outline)
+- **AnimatedCard**: Scroll-triggered animations
+- **AdminModals**: AddUserModal, AddBusinessModal, AddLocationModal
+- **Header**: Auth-aware with user menu
+- **Footer**: Links and social icons
+
+### 🗄️ Database Structure (Supabase)
+
+#### Current Setup Script
+```sql
+-- Use complete-database-setup.sql for fresh installs
+-- Contains all tables, RLS policies, functions, triggers
+```
+
+#### Tables
+1. **users** - Extended user profiles
+2. **businesses** - Partnership applications and accounts
 3. **locations** - Claw machine locations
 4. **ducks** - Individual duck inventory
-5. **redemptions** - Redemption tracking
-6. **duck_alerts** - Marketing campaigns
-7. **user_ducks** - Customer collections
+5. **user_ducks** - Collection tracking
+6. **redemptions** - Reward redemption history
+7. **duck_alerts** - Marketing campaigns
 
-### Authentication Flow
-```
-1. User fills signup form (Customer/Business)
-2. Form calls useAuth().signUp()
-3. Supabase creates auth.users record
-4. Trigger auto-creates users profile
-5. User gets email verification
-6. After verification, can sign in
-7. Header shows user menu
-```
+#### Key RLS Policies
+- Users can only view/edit their own profile
+- Anyone can submit business applications
+- Only approved businesses can login
+- Admins have full access to all tables
+- Customers can view their own collections
 
-## 🧩 Key Files and Their Status
+#### Helper Functions
+- `handle_new_user()` - Auto-creates profile on signup
+- `approve_business()` - Admin approval function
+- `reject_business()` - Admin rejection with reason
+- `update_updated_at()` - Timestamp management
 
-### Authentication System (✅ Complete)
-- `src/lib/supabase.ts` - Client configuration + helper functions
-- `src/contexts/AuthContext.tsx` - React context for auth state, includes userProfile
-- `src/types/auth.ts` - TypeScript interfaces with AuthSession type
-- `src/App.tsx` - Wrapped with AuthProvider, includes dashboard routes
+### ⚠️ PARTIALLY COMPLETE - Needs Work
 
-### Pages Status
-- `src/pages/SignIn.tsx` - ✅ Connected to Supabase, routes by user type
-- `src/pages/CustomerSignup.tsx` - ✅ Connected to Supabase  
-- `src/pages/BusinessSignup.tsx` - ✅ Connected to Supabase with membership tiers
-- `src/pages/CustomerDashboard.tsx` - ✅ UI complete, needs data integration
-- `src/pages/BusinessDashboard.tsx` - ✅ UI complete, needs data integration
-- `src/pages/AdminDashboard.tsx` - ✅ UI complete for Jim & owners
-- `src/pages/Contact.tsx` - ⚠️ Static form, needs backend
-- All other pages - ✅ Complete UI/styling
+#### Contact Form
+- **Current**: Static form UI complete
+- **Needed**: Email service integration (SendGrid/Resend)
+- **Location**: `src/pages/Contact.tsx`
 
-### Components
-- `src/components/Header.tsx` - ✅ Shows auth state, user menu
-- `src/components/AnimatedButton.tsx` - ✅ Complete
-- `src/components/AnimatedCard.tsx` - ✅ Complete
-- `src/components/Footer.tsx` - ✅ Complete
+#### Locations Map
+- **Current**: Location list with search
+- **Needed**: Interactive map integration (Google Maps/Mapbox)
+- **Location**: `src/pages/Locations.tsx`
 
-## 🔧 Development Environment
+#### Payment Processing
+- **Current**: Membership tiers defined
+- **Needed**: Stripe integration for subscriptions
+- **Location**: Business signup flow
 
-### Commands
+### 🔧 Development Environment
+
+#### Required Environment Variables
 ```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run preview      # Preview production build
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_ANON_KEY=your_anon_key
 ```
 
-### Testing Authentication
-1. Go to http://localhost:5173/customer-signup
-2. Fill form and submit
-3. Check Supabase dashboard → Authentication → Users
-4. Sign in at http://localhost:5173/signin
-5. Verify header shows user menu
+#### Commands
+```bash
+npm run dev      # Start dev server (port 5173)
+npm run build    # Production build
+npm run preview  # Preview production build
+```
 
-## 🚨 Known Issues & Notes
+#### Testing Locally
+1. Create `.env` file with Supabase credentials
+2. Run `npm install`
+3. Run `npm run dev`
+4. Create test accounts:
+   - Customer: Normal signup
+   - Business: Signup → Admin approval needed
+   - Admin: Signup → Manually change user_type in database
 
-### Working Features
-- Customer signup with email verification
-- Sign in with session persistence
-- Password validation and error handling
-- Responsive design on all pages
-- Loading states and animations
+### 🚨 Known Issues & Solutions
 
-### Build Notes
-- Use `--cache /tmp/.npm` flag for npm installs (permission fix)
-- TypeScript strict mode enabled
-- All animations performance optimized
+#### Issue: Business Signup RLS Error
+**Error**: "new row violates row-level security policy"
+**Solution**: Implemented approval workflow - businesses start as pending
 
-## 📝 Business Logic Context
+#### Issue: Dark Mode Visibility
+**Problem**: Some text/buttons not visible in certain modes
+**Solution**: Added gradient backgrounds and proper contrast classes
 
-### MyDuckRewards Concept
-- Physical claw machines at Leo's Coney Island locations
-- Every play wins a collectible duck
-- Ducks contain instant rewards + local business discounts
-- Business membership tiers: Basic, Trade, Custom
-- "Duck Alerts" for targeted marketing
+#### Issue: SQL Script Errors
+**Problem**: RAISE NOTICE not supported in Supabase
+**Solution**: Created simplified scripts without RAISE statements
 
-### User Types
-1. **Customers** - Play games, collect ducks, redeem rewards
-2. **Businesses** - Pay for duck placement, send alerts
-3. **Admins** - Manage system, locations, inventory
+#### Issue: First-Time Login
+**Problem**: Users with incomplete profiles
+**Solution**: Added redirect to profile completion with progress tracking
 
-## 🎯 Immediate Next Steps
+### 📝 Implementation Notes
 
-When continuing development, prioritize:
+#### Authentication Flow
+```typescript
+// Customer signup
+1. Fill form → supabase.auth.signUp()
+2. Creates auth.users record
+3. Trigger creates public.users profile
+4. Email verification sent
+5. First login → Check profile completion
+6. Redirect to dashboard or profile page
 
-1. **Business Signup Integration**
-   - Update `src/pages/BusinessSignup.tsx`
-   - Add business creation logic
-   - Handle membership tier selection
+// Business signup
+1. Fill form → Create business application
+2. Status = 'pending', is_active = false
+3. Admin reviews in dashboard
+4. Approval → Can login to business dashboard
+5. Rejection → Shows reason, can reapply
+```
 
-2. **Dashboard Creation**  
-   - Create customer dashboard route
-   - Create business dashboard route
-   - Add dashboard navigation
+#### User Type Routing
+```typescript
+// In SignIn.tsx
+const userProfile = await getUserProfile(user.id)
+switch(userProfile.user_type) {
+  case 'customer': navigate('/dashboard/customer')
+  case 'business': navigate('/dashboard/business')  
+  case 'admin': navigate('/dashboard/admin')
+}
+```
 
-3. **Contact Form Backend**
-   - Connect to email service or Supabase
-   - Add form submission handling
+#### Profile Completion
+```typescript
+// Check completion
+const isProfileComplete = () => {
+  return !!(first_name && last_name && phone && 
+           street_address && city && state && zip_code)
+}
 
-This documentation ensures any future Claude session can immediately understand the project state and continue development efficiently.
+// Calculate percentage
+const getCompletionPercentage = () => {
+  const fields = [first_name, last_name, email, phone, 
+                  street_address, city, state, zip_code, date_of_birth]
+  const filled = fields.filter(Boolean).length
+  return Math.round((filled / fields.length) * 100)
+}
+```
+
+### 🎯 Immediate Next Steps
+
+1. **Payment Integration**
+   - Add Stripe for business subscriptions
+   - Implement payment webhook handlers
+   - Create subscription management UI
+
+2. **Duck Management**
+   - Create duck generation system
+   - QR code scanning implementation
+   - Redemption verification flow
+
+3. **Duck Alerts**
+   - Push notification setup
+   - Email campaign integration
+   - Target audience filtering
+
+4. **Analytics Dashboard**
+   - Real-time statistics
+   - Revenue tracking
+   - Customer demographics
+
+### 🚀 Deployment Notes
+
+#### AWS Amplify Setup
+- Connected to GitHub repository
+- Auto-deploys on push to main branch
+- Environment variables configured
+- Custom domain connected
+
+#### Build Settings
+```yaml
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+```
+
+### 📚 Key Files Reference
+
+#### Core Configuration
+- `src/lib/supabase.ts` - Supabase client setup
+- `src/contexts/AuthContext.tsx` - Auth state management
+- `src/contexts/ThemeContext.tsx` - Dark mode management
+- `src/types/auth.ts` - TypeScript interfaces
+
+#### Main Pages
+- `src/pages/SignIn.tsx` - Login with user type routing
+- `src/pages/CustomerSignup.tsx` - Customer registration
+- `src/pages/BusinessSignup.tsx` - Business application
+- `src/pages/AdminDashboard.tsx` - Admin control panel
+- `src/pages/ForgotPassword.tsx` - Password reset
+- `src/pages/Locations.tsx` - Location finder
+
+#### Components
+- `src/components/AdminModals.tsx` - Admin CRUD dialogs
+- `src/components/Header.tsx` - Navigation with auth
+- `src/components/AnimatedButton.tsx` - Reusable button
+- `src/components/AnimatedCard.tsx` - Animated container
+
+#### Database
+- `complete-database-setup.sql` - Full schema setup
+- `check-database-health-simple.sql` - Health check script
+
+### 🔒 Security Considerations
+
+1. **RLS Policies**: All tables have Row Level Security
+2. **User Isolation**: Users can only access their own data
+3. **Admin Verification**: Manual promotion prevents abuse
+4. **Business Approval**: Prevents spam registrations
+5. **Environment Variables**: Never commit .env files
+
+### 📈 Performance Optimizations
+
+1. **Code Splitting**: React.lazy for dashboard routes
+2. **Image Optimization**: WebP format where possible
+3. **Bundle Size**: Tree shaking enabled
+4. **Caching**: localStorage for theme preference
+5. **Animations**: GPU-accelerated transforms
+
+### 🐛 Debugging Tips
+
+1. **Check Supabase Logs**: Dashboard → Logs → Recent queries
+2. **RLS Testing**: Use Supabase SQL editor with auth context
+3. **Network Tab**: Monitor API calls in browser DevTools
+4. **Console Errors**: Check for unhandled promises
+5. **Type Errors**: Run `npm run type-check`
+
+---
+
+This documentation ensures any future Claude session can immediately understand the project state and continue development efficiently. The project is production-ready with core features implemented and clear paths for remaining enhancements.

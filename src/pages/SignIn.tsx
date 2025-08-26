@@ -115,8 +115,9 @@ const SignIn: React.FC = () => {
             {successMessage && (
               <motion.div
                 className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg mb-6 flex items-start"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 <CheckCircle className="mr-2 mt-0.5" size={20} />
                 <div>{successMessage}</div>
@@ -128,8 +129,9 @@ const SignIn: React.FC = () => {
               {error && (
                 <motion.div
                   className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 text-red-600 dark:text-red-400 px-4 py-3 rounded-lg"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
                 >
                   {error}
                 </motion.div>
@@ -157,14 +159,9 @@ const SignIn: React.FC = () => {
 
               {/* Password */}
               <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Password
-                  </label>
-                  <Link to="/forgot-password" className="text-sm text-duck-600 dark:text-duck-400 hover:text-duck-700 dark:hover:text-duck-300">
-                    Forgot password?
-                  </Link>
-                </div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Password
+                </label>
                 <div className="relative">
                   <Lock size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                   <input
@@ -185,27 +182,24 @@ const SignIn: React.FC = () => {
                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                   </button>
                 </div>
+                <div className="mt-2 text-right">
+                  <Link to="/forgot-password" className="text-sm text-duck-600 dark:text-duck-400 hover:text-duck-700 dark:hover:text-duck-300">
+                    Forgot password?
+                  </Link>
+                </div>
               </div>
 
-              {/* Remember Me & Forgot Password */}
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember"
-                    name="remember"
-                    type="checkbox"
-                    className="h-4 w-4 text-duck-600 focus:ring-duck-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="remember" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
-                    Remember me
-                  </label>
-                </div>
-                <Link
-                  to="/forgot-password"
-                  className="text-sm text-duck-600 hover:text-duck-700 font-medium transition-colors"
-                >
-                  Forgot password?
-                </Link>
+              {/* Remember Me */}
+              <div className="flex items-center">
+                <input
+                  id="remember"
+                  name="remember"
+                  type="checkbox"
+                  className="h-4 w-4 text-duck-600 focus:ring-duck-500 border-gray-300 rounded"
+                />
+                <label htmlFor="remember" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                  Remember me
+                </label>
               </div>
 
               {/* Sign In Button */}
