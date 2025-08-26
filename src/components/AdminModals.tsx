@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, User, Building, MapPin } from 'lucide-react'
+import { X, User, Building, MapPin, AlertCircle } from 'lucide-react'
 import AnimatedButton from './AnimatedButton'
 import { supabase } from '../lib/supabase'
 
@@ -149,7 +149,7 @@ export const AddUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onSuccess 
               <select
                 value={formData.user_type}
                 onChange={(e) => setFormData({ ...formData, user_type: e.target.value as any })}
-                className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-duck-500"
+                className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
               >
                 <option value="customer">Customer</option>
                 <option value="business">Business</option>
@@ -442,7 +442,7 @@ export const AddBusinessModal: React.FC<ModalProps> = ({ isOpen, onClose, onSucc
                   <select
                     value={formData.membership_tier}
                     onChange={(e) => setFormData({ ...formData, membership_tier: e.target.value as any })}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-duck-500"
+                    className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
                   >
                     <option value="basic">Basic</option>
                     <option value="trade">Trade</option>
@@ -640,6 +640,136 @@ export const AddLocationModal: React.FC<ModalProps> = ({ isOpen, onClose, onSucc
           </form>
         </motion.div>
       </motion.div>
+    </AnimatePresence>
+  )
+}
+
+// Suspend User Modal
+interface SuspendUserModalProps {
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: (reason: string) => void
+  userEmail?: string
+}
+
+export const SuspendUserModal: React.FC<SuspendUserModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  onConfirm, 
+  userEmail 
+}) => {
+  const [reason, setReason] = useState('')
+  const [error, setError] = useState('')
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!reason.trim()) {
+      setError('Please provide a reason for suspension')
+      return
+    }
+    onConfirm(reason)
+    setReason('')
+    setError('')
+  }
+
+  const handleClose = () => {
+    setReason('')
+    setError('')
+    onClose()
+  }
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+          onClick={handleClose}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                  <AlertCircle className="text-yellow-600 dark:text-yellow-400" size={24} />
+                </div>
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+                  Suspend User
+                </h2>
+              </div>
+              <button
+                onClick={handleClose}
+                className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                <X size={24} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {userEmail && (
+                <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Suspending user: <span className="font-medium text-gray-900 dark:text-white">{userEmail}</span>
+                  </p>
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Reason for Suspension <span className="text-red-500">*</span>
+                </label>
+                <textarea
+                  value={reason}
+                  onChange={(e) => {
+                    setReason(e.target.value)
+                    setError('')
+                  }}
+                  placeholder="Provide a detailed reason for suspending this user..."
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 transition-colors resize-none"
+                  rows={4}
+                  required
+                />
+                {error && (
+                  <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
+                )}
+              </div>
+
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-3">
+                <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                  <strong>Note:</strong> This action will immediately prevent the user from accessing their account.
+                </p>
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <AnimatedButton
+                  type="submit"
+                  variant="primary"
+                  size="sm"
+                  className="flex-1 bg-yellow-500 hover:bg-yellow-600"
+                >
+                  Confirm Suspension
+                </AnimatedButton>
+                <AnimatedButton
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleClose}
+                  className="flex-1"
+                >
+                  Cancel
+                </AnimatedButton>
+              </div>
+            </form>
+          </motion.div>
+        </motion.div>
+      )}
     </AnimatePresence>
   )
 }

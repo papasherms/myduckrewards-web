@@ -97,7 +97,7 @@ const Home: React.FC = () => {
               
               <Link to="/business">
                 <AnimatedButton 
-                  variant="outline"
+                  variant="secondary"
                   size="xl"
                   icon={<Users size={24} />}
                 >
@@ -246,14 +246,14 @@ const Home: React.FC = () => {
           </div>
 
           <motion.div 
-            className="text-center mt-12"
+            className="flex justify-center mt-12"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
           >
             <Link to="/how-it-works">
-              <AnimatedButton size="lg" icon={<Zap size={20} />}>
+              <AnimatedButton variant="secondary" size="lg" icon={<Zap size={20} />}>
                 Learn More
               </AnimatedButton>
             </Link>
@@ -302,10 +302,9 @@ const Home: React.FC = () => {
               </Link>
               <Link to="/locations">
                 <AnimatedButton 
-                  variant="secondary" 
-                  size="xl" 
+                  variant="secondary"
+                  size="xl"
                   icon={<MapPin size={24} />}
-                  className="bg-white !text-duck-600 hover:bg-gray-100 dark:bg-gray-800 dark:!text-white dark:hover:bg-gray-700 shadow-lg border-0"
                 >
                   Find Locations
                 </AnimatedButton>

@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { MapPin, Search, Navigation, Clock, Phone, ExternalLink } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
+import GoogleLocationMap from '../components/GoogleLocationMap'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import usePageTitle from '../hooks/usePageTitle'
@@ -157,23 +158,34 @@ const Locations: React.FC = () => {
           </div>
         </AnimatedCard>
 
-        {/* Map Placeholder */}
+        {/* Interactive Map */}
         <AnimatedCard className="mb-8">
           <div className="p-6">
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
               Interactive Map
             </h2>
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-96 flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="mx-auto text-gray-400 mb-4" size={48} />
-                <p className="text-gray-500 dark:text-gray-400">
-                  Map integration coming soon!
-                </p>
-                <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
-                  For now, view locations in the list below
-                </p>
+            {locations.length > 0 ? (
+              <GoogleLocationMap 
+                locations={locations.map(loc => ({
+                  ...loc,
+                  machine_capacity: loc.machine_capacity || 100
+                }))}
+                center={{ lat: 42.3314, lng: -83.0458 }} // Detroit area center
+                zoom={11}
+              />
+            ) : (
+              <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-96 flex items-center justify-center">
+                <div className="text-center">
+                  <MapPin className="mx-auto text-gray-400 mb-4" size={48} />
+                  <p className="text-gray-500 dark:text-gray-400">
+                    No locations to display on map
+                  </p>
+                  <p className="text-sm text-gray-400 dark:text-gray-500 mt-2">
+                    Locations will appear here once available
+                  </p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </AnimatedCard>
 

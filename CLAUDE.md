@@ -219,6 +219,35 @@ const getCompletionPercentage = () => {
 }
 ```
 
+### 🎨 UI/UX Standards
+
+#### Form Input Styling
+All form inputs (text, select, textarea) should use consistent styling:
+```css
+className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors"
+```
+
+For select elements, add `appearance-none` to remove browser default styling:
+```css
+className="... appearance-none"
+```
+
+#### Button Variants
+- **Primary**: Orange gradient for main CTAs
+- **Secondary**: Blue for navigation/secondary actions  
+- **Outline**: Border-only for tertiary actions
+
+### 🗺️ Google Maps Integration
+
+The project uses Google Maps API for location display. To set up:
+
+1. Get a Google Maps API key from Google Cloud Console
+2. Enable Maps JavaScript API and Places API
+3. Add to `.env` file:
+```bash
+VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+```
+
 ### 🎯 Immediate Next Steps
 
 1. **Payment Integration**

@@ -308,9 +308,8 @@ const About: React.FC = () => {
               </AnimatedButton>
               <Link to="/business-signup">
                 <AnimatedButton 
-                  variant="secondary"
+                  variant="primary"
                   size="xl"
-                  className="!bg-white !text-duck-600 hover:!bg-duck-50 dark:!bg-gray-800 dark:!text-white dark:hover:!bg-gray-700 border-0"
                 >
                   Become a Partner
                 </AnimatedButton>

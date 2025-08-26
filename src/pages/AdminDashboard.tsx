@@ -20,11 +20,10 @@ import {
   Check,
   X,
   AlertCircle,
-  Search,
-  Filter
+  Search
 } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
-import { AddUserModal, AddBusinessModal, AddLocationModal } from '../components/AdminModals'
+import { AddUserModal, AddBusinessModal, AddLocationModal, SuspendUserModal } from '../components/AdminModals'
 import usePageTitle from '../hooks/usePageTitle'
 
 const AdminDashboard: React.FC = () => {
@@ -40,6 +39,8 @@ const AdminDashboard: React.FC = () => {
   const [showAddUserModal, setShowAddUserModal] = useState(false)
   const [showAddBusinessModal, setShowAddBusinessModal] = useState(false)
   const [showAddLocationModal, setShowAddLocationModal] = useState(false)
+  const [showSuspendModal, setShowSuspendModal] = useState(false)
+  const [userToSuspend, setUserToSuspend] = useState<any>(null)
   const [searchTerm, setSearchTerm] = useState('')
   const [filterType, setFilterType] = useState('all')
   const [sortBy, setSortBy] = useState('created_at')
@@ -153,9 +154,7 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
-  const suspendUser = async (userId: string) => {
-    const reason = prompt('Please provide a reason for suspending this user:')
-    if (!reason) return
+  const suspendUser = async (userId: string, reason: string) => {
     
     setLoading(true)
     try {
@@ -436,13 +435,13 @@ const AdminDashboard: React.FC = () => {
                         placeholder="Search by name, email, or ID..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-duck-500 focus:outline-none"
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 transition-colors"
                       />
                     </div>
                     <select
                       value={filterType}
                       onChange={(e) => setFilterType(e.target.value)}
-                      className="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-duck-500 focus:outline-none"
+                      className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
                     >
                       <option value="all">All Types</option>
                       <option value="customer">Customers</option>
@@ -452,7 +451,7 @@ const AdminDashboard: React.FC = () => {
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-duck-500 focus:outline-none"
+                      className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
                     >
                       <option value="created_at">Date Created</option>
                       <option value="name">Name</option>
@@ -536,7 +535,10 @@ const AdminDashboard: React.FC = () => {
                                 {user.user_type !== 'admin' && user.id !== userProfile?.id && (
                                   <>
                                     <button
-                                      onClick={() => suspendUser(user.id)}
+                                      onClick={() => {
+                                        setUserToSuspend(user)
+                                        setShowSuspendModal(true)
+                                      }}
                                       className="text-yellow-400 hover:text-yellow-300 transition-colors"
                                       title="Suspend User"
                                     >
@@ -910,6 +912,22 @@ const AdminDashboard: React.FC = () => {
         isOpen={showAddLocationModal} 
         onClose={() => setShowAddLocationModal(false)}
         onSuccess={fetchData}
+      />
+
+      <SuspendUserModal
+        isOpen={showSuspendModal}
+        onClose={() => {
+          setShowSuspendModal(false)
+          setUserToSuspend(null)
+        }}
+        onConfirm={(reason) => {
+          if (userToSuspend) {
+            suspendUser(userToSuspend.id, reason)
+            setShowSuspendModal(false)
+            setUserToSuspend(null)
+          }
+        }}
+        userEmail={userToSuspend?.email}
       />
     </div>
   )
