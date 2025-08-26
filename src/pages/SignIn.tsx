@@ -157,9 +157,14 @@ const SignIn: React.FC = () => {
 
               {/* Password */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Password
-                </label>
+                <div className="flex justify-between items-center mb-2">
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Password
+                  </label>
+                  <Link to="/forgot-password" className="text-sm text-duck-600 dark:text-duck-400 hover:text-duck-700 dark:hover:text-duck-300">
+                    Forgot password?
+                  </Link>
+                </div>
                 <div className="relative">
                   <Lock size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                   <input

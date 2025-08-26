@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react'
 
 const Contact: React.FC = () => {
@@ -171,9 +172,11 @@ const Contact: React.FC = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-8">
             Currently available at Leo's locations throughout Southeast Michigan
           </p>
-          <button className="bg-gradient-to-r from-duck-500 to-orange-500 hover:from-duck-600 hover:to-orange-600 text-white px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all">
-            View All Locations
-          </button>
+          <Link to="/locations">
+            <button className="bg-gradient-to-r from-duck-500 to-orange-500 hover:from-duck-600 hover:to-orange-600 text-white px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all">
+              View All Locations
+            </button>
+          </Link>
         </div>
       </div>
     </div>

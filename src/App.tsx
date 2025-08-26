@@ -8,7 +8,9 @@ import About from './pages/About'
 import HowItWorks from './pages/HowItWorks'
 import Business from './pages/Business'
 import Contact from './pages/Contact'
+import Locations from './pages/Locations'
 import SignIn from './pages/SignIn'
+import ForgotPassword from './pages/ForgotPassword'
 import CustomerSignup from './pages/CustomerSignup'
 import BusinessSignup from './pages/BusinessSignup'
 import CustomerDashboard from './pages/CustomerDashboard'
@@ -29,7 +31,9 @@ function App() {
               <Route path="/how-it-works" element={<HowItWorks />} />
               <Route path="/business" element={<Business />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/locations" element={<Locations />} />
               <Route path="/signin" element={<SignIn />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/customer-signup" element={<CustomerSignup />} />
               <Route path="/business-signup" element={<BusinessSignup />} />
               {/* Dashboard Routes */}
