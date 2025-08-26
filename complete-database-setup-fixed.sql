@@ -1,4 +1,4 @@
--- Complete Database Setup for MyDuckRewards
+-- Complete Database Setup for MyDuckRewards (FIXED VERSION)
 -- Run this entire script in Supabase SQL Editor
 -- This includes all necessary updates for the approval workflow and admin features
 
@@ -33,8 +33,11 @@ WHERE approval_status IS NULL;
 -- PART 2: Create Views for Admin Dashboard
 -- ============================================
 
+-- Drop view if exists and recreate
+DROP VIEW IF EXISTS public.pending_businesses;
+
 -- Create a view for pending businesses (for admin dashboard)
-CREATE OR REPLACE VIEW public.pending_businesses AS
+CREATE VIEW public.pending_businesses AS
 SELECT 
   b.*,
   u.email as user_email,
@@ -195,8 +198,12 @@ CREATE POLICY "Admins can manage locations"
 -- PART 6: Helper Functions for Admin Operations
 -- ============================================
 
+-- Drop functions if they exist
+DROP FUNCTION IF EXISTS public.approve_business(UUID, UUID);
+DROP FUNCTION IF EXISTS public.reject_business(UUID, UUID, TEXT);
+
 -- Function to approve a business
-CREATE OR REPLACE FUNCTION public.approve_business(
+CREATE FUNCTION public.approve_business(
   business_id UUID,
   admin_id UUID
 )
@@ -215,7 +222,7 @@ END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Function to reject a business
-CREATE OR REPLACE FUNCTION public.reject_business(
+CREATE FUNCTION public.reject_business(
   business_id UUID,
   admin_id UUID,
   reason TEXT
@@ -233,14 +240,14 @@ BEGIN
   
   RETURN true;
 END;
-$онда LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- ============================================
 -- PART 7: Create Sample Data (Optional)
 -- ============================================
 
 -- Add some sample locations if you want test data
--- Uncomment the lines below if you want sample locations
+-- Uncomment the INSERT statement below if you want sample locations
 
 /*
 INSERT INTO public.locations (name, address, city, state, zip_code, machine_capacity, is_active)
@@ -264,41 +271,7 @@ ON CONFLICT DO NOTHING;
 */
 
 -- ============================================
--- PART 8: Verify Everything is Set Up
--- ============================================
-
--- Check if approval columns exist
-SELECT column_name, data_type, is_nullable, column_default
-FROM information_schema.columns
-WHERE table_schema = 'public' 
-  AND table_name = 'businesses'
-  AND column_name IN ('approval_status', 'approved_at', 'approved_by', 'rejection_reason', 'submitted_at')
-ORDER BY column_name;
-
--- Check RLS policies on businesses
-SELECT 
-  schemaname,
-  tablename,
-  policyname,
-  permissive,
-  roles,
-  cmd
-FROM pg_policies 
-WHERE schemaname = 'public' 
-  AND tablename IN ('businesses', 'users', 'locations')
-ORDER BY tablename, policyname;
-
--- Check if RLS is enabled on all tables
-SELECT 
-  schemaname,
-  tablename,
-  rowsecurity
-FROM pg_tables
-WHERE schemaname = 'public' 
-  AND tablename IN ('businesses', 'users', 'locations', 'ducks', 'redemptions');
-
--- ============================================
--- PART 9: Grant Necessary Permissions
+-- PART 8: Grant Necessary Permissions
 -- ============================================
 
 -- Grant permissions to authenticated users
@@ -312,25 +285,37 @@ GRANT EXECUTE ON FUNCTION public.approve_business(UUID, UUID) TO authenticated;
 GRANT EXECUTE ON FUNCTION public.reject_business(UUID, UUID, TEXT) TO authenticated;
 
 -- ============================================
--- SUCCESS MESSAGE
+-- PART 9: Verify Setup (Simple Checks)
 -- ============================================
 
-DO $$
-BEGIN
-  RAISE NOTICE '';
-  RAISE NOTICE '========================================';
-  RAISE NOTICE 'Database setup completed successfully!';
-  RAISE NOTICE '========================================';
-  RAISE NOTICE '';
-  RAISE NOTICE 'The following has been configured:';
-  RAISE NOTICE '1. Business approval workflow columns added';
-  RAISE NOTICE '2. RLS policies for businesses, users, and locations';
-  RAISE NOTICE '3. Admin helper functions created';
-  RAISE NOTICE '4. Permissions granted appropriately';
-  RAISE NOTICE '';
-  RAISE NOTICE 'Next steps:';
-  RAISE NOTICE '1. Create an admin user if you haven''t already';
-  RAISE NOTICE '2. Test the business signup and approval flow';
-  RAISE NOTICE '3. Uncomment the sample data section if you want test locations';
-  RAISE NOTICE '';
-END $$;
+-- Check if approval columns exist
+SELECT 
+  'Approval columns check:' as check_type,
+  COUNT(*) as columns_found,
+  CASE 
+    WHEN COUNT(*) = 5 THEN 'SUCCESS - All columns exist'
+    ELSE 'ERROR - Missing columns'
+  END as status
+FROM information_schema.columns
+WHERE table_schema = 'public' 
+  AND table_name = 'businesses'
+  AND column_name IN ('approval_status', 'approved_at', 'approved_by', 'rejection_reason', 'submitted_at');
+
+-- Check RLS status
+SELECT 
+  'RLS Status:' as check_type,
+  tablename,
+  CASE 
+    WHEN rowsecurity THEN 'Enabled'
+    ELSE 'Disabled'
+  END as rls_status
+FROM pg_tables
+WHERE schemaname = 'public' 
+  AND tablename IN ('businesses', 'users', 'locations')
+ORDER BY tablename;
+
+-- Final message
+SELECT 
+  '================================' as divider,
+  'Setup Complete!' as message,
+  'Next: Run make-user-admin.sql to grant admin access' as next_step;
