@@ -6,8 +6,10 @@ import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
 import { useAuth } from '../contexts/AuthContext'
 import { createBusiness } from '../lib/supabase'
+import usePageTitle from '../hooks/usePageTitle'
 
 const BusinessSignup: React.FC = () => {
+  usePageTitle('Business Sign Up')
   const navigate = useNavigate()
   const { signUp } = useAuth()
   const [showPassword, setShowPassword] = useState(false)

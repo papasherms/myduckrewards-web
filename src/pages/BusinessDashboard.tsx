@@ -18,8 +18,10 @@ import {
 } from 'lucide-react'
 import AnimatedCard from '../components/AnimatedCard'
 import AnimatedButton from '../components/AnimatedButton'
+import usePageTitle from '../hooks/usePageTitle'
 
 const BusinessDashboard: React.FC = () => {
+  usePageTitle('Business Dashboard')
   const { user } = useAuth()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('overview')

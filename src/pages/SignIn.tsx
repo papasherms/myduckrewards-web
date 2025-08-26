@@ -6,8 +6,10 @@ import { useAuth } from '../contexts/AuthContext'
 import { getUserProfile } from '../lib/supabase'
 import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
+import usePageTitle from '../hooks/usePageTitle'
 
 const SignIn: React.FC = () => {
+  usePageTitle('Sign In')
   const [searchParams] = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)

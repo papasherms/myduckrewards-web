@@ -4,8 +4,10 @@ import { Link } from 'react-router-dom'
 import { Play, Gift, MapPin, Zap, Users, Star, ArrowRight, Sparkles } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
+import usePageTitle from '../hooks/usePageTitle'
 
 const Home: React.FC = () => {
+  usePageTitle('Home')
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

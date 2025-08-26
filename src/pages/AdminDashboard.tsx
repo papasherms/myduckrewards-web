@@ -19,8 +19,10 @@ import {
   Plus
 } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
+import usePageTitle from '../hooks/usePageTitle'
 
 const AdminDashboard: React.FC = () => {
+  usePageTitle('Admin Panel')
   const { user, userProfile } = useAuth()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('overview')
