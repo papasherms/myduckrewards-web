@@ -57,7 +57,7 @@ export const debugBusinessCreation = async () => {
   
   if (session) {
     // Try to read from businesses table
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('businesses')
       .select('id')
       .limit(1)

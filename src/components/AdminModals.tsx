@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, User, Building, MapPin, Package, Mail, Phone, Lock } from 'lucide-react'
+import { X, User, Building, MapPin } from 'lucide-react'
 import AnimatedButton from './AnimatedButton'
 import { supabase } from '../lib/supabase'
 
@@ -30,7 +30,7 @@ export const AddUserModal: React.FC<ModalProps> = ({ isOpen, onClose, onSuccess 
 
     try {
       // Create user via admin API
-      const { data, error: signUpError } = await supabase.auth.admin.createUser({
+      const { error: signUpError } = await supabase.auth.admin.createUser({
         email: formData.email,
         password: formData.password,
         email_confirm: true,

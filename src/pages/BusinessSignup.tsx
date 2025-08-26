@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Building, User, Mail, Lock, Phone, MapPin, Globe, Eye, EyeOff, CheckCircle, AlertCircle, Briefcase } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
 import { useAuth } from '../contexts/AuthContext'
-import { createBusiness } from '../lib/supabase'
 import { createBusinessApplicationRPC } from '../lib/supabase-business-fix'
 import usePageTitle from '../hooks/usePageTitle'
 
 const BusinessSignup: React.FC = () => {
   usePageTitle('Business Sign Up')
-  const navigate = useNavigate()
   const { signUp } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [step, setStep] = useState(1)

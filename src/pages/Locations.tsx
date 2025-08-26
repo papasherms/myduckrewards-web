@@ -25,7 +25,6 @@ const Locations: React.FC = () => {
   const { userProfile } = useAuth()
   const [locations, setLocations] = useState<Location[]>([])
   const [searchZip, setSearchZip] = useState('')
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const [loading, setLoading] = useState(true)
   const [searchMode, setSearchMode] = useState<'zip' | 'nearby'>('zip')
 
@@ -61,10 +60,8 @@ const Locations: React.FC = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          })
+          // Store position for future use
+          console.log('User location:', position.coords.latitude, position.coords.longitude)
           setSearchMode('nearby')
           // In a real app, this would find nearby locations
           fetchLocations()

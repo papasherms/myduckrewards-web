@@ -15,10 +15,8 @@ import {
   Activity,
   Database,
   Bell,
-  ChevronRight,
   Eye,
   Plus,
-  Clock,
   Check,
   X,
   AlertCircle
@@ -724,17 +722,17 @@ const AdminDashboard: React.FC = () => {
       <AddUserModal 
         isOpen={showAddUserModal} 
         onClose={() => setShowAddUserModal(false)}
-        onUserAdded={fetchData}
+        onSuccess={fetchData}
       />
       <AddBusinessModal 
         isOpen={showAddBusinessModal} 
         onClose={() => setShowAddBusinessModal(false)}
-        onBusinessAdded={fetchData}
+        onSuccess={fetchData}
       />
       <AddLocationModal 
         isOpen={showAddLocationModal} 
         onClose={() => setShowAddLocationModal(false)}
-        onLocationAdded={fetchData}
+        onSuccess={fetchData}
       />
     </div>
   )
