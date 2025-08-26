@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { User, Mail, Lock, Phone, MapPin, Calendar, Eye, EyeOff, CheckCircle, ArrowRight } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import AnimatedButton from '../components/AnimatedButton'
@@ -27,7 +27,6 @@ const CustomerSignup: React.FC = () => {
   })
 
   const { signUp } = useAuth()
-  const navigate = useNavigate()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
