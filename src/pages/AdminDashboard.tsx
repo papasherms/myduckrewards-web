@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import { supabase } from '../lib/supabase'
 import { 
   Shield,
   Users,
@@ -16,7 +17,11 @@ import {
   Bell,
   ChevronRight,
   Eye,
-  Plus
+  Plus,
+  Clock,
+  Check,
+  X,
+  AlertCircle
 } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
 import usePageTitle from '../hooks/usePageTitle'
@@ -26,12 +31,65 @@ const AdminDashboard: React.FC = () => {
   const { user, userProfile } = useAuth()
   const navigate = useNavigate()
   const [activeTab, setActiveTab] = useState('overview')
+  const [pendingBusinesses, setPendingBusinesses] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     if (!user || userProfile?.user_type !== 'admin') {
       navigate('/signin')
+    } else {
+      fetchPendingBusinesses()
     }
   }, [user, userProfile, navigate])
+  
+  const fetchPendingBusinesses = async () => {
+    const { data, error } = await supabase
+      .from('businesses')
+      .select('*, users!businesses_user_id_fkey(email, first_name, last_name)')
+      .eq('approval_status', 'pending')
+      .order('created_at', { ascending: false })
+    
+    if (!error && data) {
+      setPendingBusinesses(data)
+    }
+  }
+  
+  const approveBusinessApplication = async (businessId: string) => {
+    setLoading(true)
+    const { error } = await supabase
+      .from('businesses')
+      .update({ 
+        approval_status: 'approved',
+        approved_at: new Date().toISOString(),
+        approved_by: user?.id,
+        is_active: true
+      })
+      .eq('id', businessId)
+    
+    if (!error) {
+      await fetchPendingBusinesses()
+    }
+    setLoading(false)
+  }
+  
+  const rejectBusinessApplication = async (businessId: string, reason: string) => {
+    setLoading(true)
+    const { error } = await supabase
+      .from('businesses')
+      .update({ 
+        approval_status: 'rejected',
+        approved_at: new Date().toISOString(),
+        approved_by: user?.id,
+        rejection_reason: reason,
+        is_active: false
+      })
+      .eq('id', businessId)
+    
+    if (!error) {
+      await fetchPendingBusinesses()
+    }
+    setLoading(false)
+  }
 
   const stats = [
     { label: 'Total Users', value: '0', icon: Users, color: 'from-blue-500 to-blue-600' },
@@ -142,6 +200,66 @@ const AdminDashboard: React.FC = () => {
           <div className="p-8">
             {activeTab === 'overview' && (
               <div className="space-y-6">
+                {/* Pending Business Approvals */}
+                {pendingBusinesses.length > 0 && (
+                  <div>
+                    <h2 className="text-xl font-bold text-white mb-4 flex items-center">
+                      <AlertCircle className="text-yellow-400 mr-2" size={24} />
+                      Pending Business Approvals ({pendingBusinesses.length})
+                    </h2>
+                    <div className="grid grid-cols-1 gap-4">
+                      {pendingBusinesses.map((business) => (
+                        <div key={business.id} className="bg-gray-700/50 rounded-xl p-4 border border-yellow-500/30">
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <h3 className="font-bold text-white text-lg">{business.business_name}</h3>
+                              <p className="text-gray-400 text-sm mb-2">{business.business_type}</p>
+                              <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                  <span className="text-gray-500">Contact:</span>
+                                  <p className="text-gray-300">{business.contact_name}</p>
+                                  <p className="text-gray-300">{business.email}</p>
+                                  <p className="text-gray-300">{business.phone}</p>
+                                </div>
+                                <div>
+                                  <span className="text-gray-500">Location:</span>
+                                  <p className="text-gray-300">{business.city}, {business.state} {business.zip_code}</p>
+                                  <span className="text-gray-500">Tier:</span>
+                                  <p className="text-gray-300 capitalize">{business.membership_tier}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex flex-col space-y-2 ml-4">
+                              <AnimatedButton
+                                variant="primary"
+                                size="sm"
+                                icon={<Check size={16} />}
+                                onClick={() => approveBusinessApplication(business.id)}
+                                disabled={loading}
+                              >
+                                Approve
+                              </AnimatedButton>
+                              <AnimatedButton
+                                variant="outline"
+                                size="sm"
+                                icon={<X size={16} />}
+                                onClick={() => {
+                                  const reason = prompt('Rejection reason:')
+                                  if (reason) rejectBusinessApplication(business.id, reason)
+                                }}
+                                disabled={loading}
+                                className="border-red-500 text-red-500 hover:bg-red-500 hover:text-white"
+                              >
+                                Reject
+                              </AnimatedButton>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Quick Actions */}
                   <div>

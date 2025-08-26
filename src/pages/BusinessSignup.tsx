@@ -17,6 +17,7 @@ const BusinessSignup: React.FC = () => {
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'trade' | 'custom'>('trade')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
   const [formData, setFormData] = useState({
     businessName: '',
     businessType: '',
@@ -125,15 +126,17 @@ const BusinessSignup: React.FC = () => {
             membership_start_date: new Date().toISOString().split('T')[0], // Just date, no time
             membership_end_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 months free
             duck_alerts_remaining: selectedPlan === 'custom' ? 4 : selectedPlan === 'trade' ? 2 : 1,
-            is_active: true
+            is_active: false, // Will be activated after admin approval
+            approval_status: 'pending'
           })
 
           if (businessResult.error) {
             throw businessResult.error
           }
 
-          // Success - redirect to sign in
-          navigate('/signin?registered=true&type=business')
+          // Success - show pending approval message
+          setSuccess(true)
+          setStep(4) // Move to success step
         }
       } catch (err: any) {
         console.error('Business signup error:', err)
@@ -570,8 +573,63 @@ const BusinessSignup: React.FC = () => {
               </motion.div>
             )}
 
+            {/* Step 4: Success Message */}
+            {step === 4 && success && (
+              <motion.div
+                variants={stepVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                className="text-center py-8"
+              >
+                <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle size={40} className="text-green-500" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                  Partnership Application Submitted!
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Thank you for applying to become a MyDuckRewards partner. Your application is now under review.
+                </p>
+                <div className="bg-duck-50 dark:bg-duck-900/20 border border-duck-200 dark:border-duck-700 rounded-xl p-6 mb-6 text-left">
+                  <h4 className="font-semibold text-gray-900 dark:text-white mb-3">What happens next?</h4>
+                  <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                    <li className="flex items-start">
+                      <CheckCircle size={16} className="text-duck-500 mr-2 mt-0.5" />
+                      <span>Our team will review your application within 24-48 hours</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle size={16} className="text-duck-500 mr-2 mt-0.5" />
+                      <span>You'll receive an email at <strong>{formData.email}</strong> once approved</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle size={16} className="text-duck-500 mr-2 mt-0.5" />
+                      <span>After approval, you can log in with your email and password</span>
+                    </li>
+                    <li className="flex items-start">
+                      <CheckCircle size={16} className="text-duck-500 mr-2 mt-0.5" />
+                      <span>Your first 3 months are completely FREE!</span>
+                    </li>
+                  </ul>
+                </div>
+                <div className="flex gap-3">
+                  <Link to="/" className="flex-1">
+                    <AnimatedButton variant="outline" size="lg" className="w-full">
+                      Return to Home
+                    </AnimatedButton>
+                  </Link>
+                  <Link to="/contact" className="flex-1">
+                    <AnimatedButton variant="primary" size="lg" className="w-full">
+                      Contact Support
+                    </AnimatedButton>
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+
             {/* Navigation */}
-            <form onSubmit={handleSubmit}>
+            {step < 4 && (
+              <form onSubmit={handleSubmit}>
               <div className="flex gap-3 mt-8">
                 {step > 1 && (
                   <AnimatedButton
@@ -597,6 +655,7 @@ const BusinessSignup: React.FC = () => {
                 </AnimatedButton>
               </div>
             </form>
+            )}
           </div>
         </AnimatedCard>
 

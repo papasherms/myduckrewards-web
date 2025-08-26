@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { LogIn, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
-import { getUserProfile } from '../lib/supabase'
+import { getUserProfile, supabase } from '../lib/supabase'
 import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
 import usePageTitle from '../hooks/usePageTitle'
@@ -57,6 +57,26 @@ const SignIn: React.FC = () => {
       } else if (data?.user) {
         // Get user profile to determine user type
         const { data: profile } = await getUserProfile(data.user.id)
+        
+        // Check if business user is approved
+        if (profile?.user_type === 'business') {
+          // Check business approval status
+          const { data: business } = await supabase
+            .from('businesses')
+            .select('approval_status')
+            .eq('user_id', data.user.id)
+            .single()
+          
+          if (business?.approval_status === 'pending') {
+            setError('Your business partnership is pending approval. You will receive an email once approved.')
+            await supabase.auth.signOut()
+            return
+          } else if (business?.approval_status === 'rejected') {
+            setError('Your business partnership application was not approved. Please contact support for more information.')
+            await supabase.auth.signOut()
+            return
+          }
+        }
         
         // Redirect based on user type
         if (profile?.user_type === 'admin') {
