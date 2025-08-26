@@ -33,11 +33,22 @@ export interface Business {
   updated_at: string
 }
 
+export interface AuthSession {
+  user: {
+    id: string
+    email?: string
+    email_confirmed_at?: string
+  }
+}
+
 export interface AuthContextType {
-  user: User | null
+  user: AuthSession['user'] | null
+  userProfile: User | null
   session: any
   loading: boolean
   signUp: (email: string, password: string, userType: 'customer' | 'business', userData: any) => Promise<any>
   signIn: (email: string, password: string) => Promise<any>
   signOut: () => Promise<any>
+  isProfileComplete: () => boolean
+  getProfileCompletionPercentage: () => number
 }

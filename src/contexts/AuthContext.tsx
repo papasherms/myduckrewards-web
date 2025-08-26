@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { supabase, signUp as supabaseSignUp, signIn as supabaseSignIn, signOut as supabaseSignOut } from '../lib/supabase'
-import type { User, AuthContextType } from '../types/auth'
+import type { User, AuthContextType, AuthSession } from '../types/auth'
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -13,15 +13,29 @@ export const useAuth = () => {
 }
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState<AuthSession['user'] | null>(null)
+  const [userProfile, setUserProfile] = useState<User | null>(null)
   const [session, setSession] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  
+  const isProfileComplete = () => {
+    if (!userProfile) return false
+    return !!(userProfile.first_name && userProfile.last_name && userProfile.phone && userProfile.zip_code)
+  }
+  
+  const getProfileCompletionPercentage = () => {
+    if (!userProfile) return 0
+    const fields = ['first_name', 'last_name', 'phone', 'zip_code', 'date_of_birth']
+    const completedFields = fields.filter(field => userProfile[field as keyof User])
+    return Math.round((completedFields.length / fields.length) * 100)
+  }
 
   useEffect(() => {
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       if (session?.user) {
+        setUser(session.user)
         fetchUserProfile(session.user.id)
       } else {
         setLoading(false)
@@ -34,9 +48,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
       if (session?.user) {
+        setUser(session.user)
         fetchUserProfile(session.user.id)
       } else {
         setUser(null)
+        setUserProfile(null)
         setLoading(false)
       }
     })
@@ -55,7 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) {
         console.error('Error fetching user profile:', error)
       } else {
-        setUser(data)
+        setUserProfile(data)
       }
     } catch (error) {
       console.error('Error fetching user profile:', error)
@@ -78,6 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const result = await supabaseSignOut()
     if (!result.error) {
       setUser(null)
+      setUserProfile(null)
       setSession(null)
     }
     return result
@@ -85,11 +102,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const value: AuthContextType = {
     user,
+    userProfile,
     session,
     loading,
     signUp,
     signIn,
     signOut,
+    isProfileComplete,
+    getProfileCompletionPercentage,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

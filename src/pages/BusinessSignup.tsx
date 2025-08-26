@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
-import { Building, User, Mail, Lock, Phone, MapPin, Globe, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react'
+import { Building, User, Mail, Lock, Phone, MapPin, Globe, Eye, EyeOff, CheckCircle, AlertCircle, Briefcase } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
 import { useAuth } from '../contexts/AuthContext'
@@ -120,8 +120,8 @@ const BusinessSignup: React.FC = () => {
             state: formData.state,
             zip_code: formData.zipCode,
             membership_tier: selectedPlan,
-            membership_start_date: new Date().toISOString(),
-            membership_end_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), // 3 months free
+            membership_start_date: new Date().toISOString().split('T')[0], // Just date, no time
+            membership_end_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 months free
             duck_alerts_remaining: selectedPlan === 'custom' ? 4 : selectedPlan === 'trade' ? 2 : 1,
             is_active: true
           })
@@ -290,23 +290,32 @@ const BusinessSignup: React.FC = () => {
                     <label htmlFor="businessType" className="block text-sm font-medium text-gray-700 mb-2">
                       Business Type
                     </label>
-                    <select
-                      id="businessType"
-                      name="businessType"
-                      value={formData.businessType}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
-                      required
-                    >
-                      <option value="">Select business type</option>
-                      <option value="restaurant">Restaurant</option>
-                      <option value="retail">Retail Store</option>
-                      <option value="services">Services</option>
-                      <option value="entertainment">Entertainment</option>
-                      <option value="automotive">Automotive</option>
-                      <option value="health">Health & Wellness</option>
-                      <option value="other">Other</option>
-                    </select>
+                    <div className="relative">
+                      <Briefcase size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                      <select
+                        id="businessType"
+                        name="businessType"
+                        value={formData.businessType}
+                        onChange={handleInputChange}
+                        className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white transition-colors appearance-none"
+                        required
+                        style={{
+                          backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                          backgroundPosition: 'right 0.75rem center',
+                          backgroundRepeat: 'no-repeat',
+                          backgroundSize: '1.5em 1.5em',
+                        }}
+                      >
+                        <option value="">Select business type</option>
+                        <option value="restaurant">Restaurant</option>
+                        <option value="retail">Retail Store</option>
+                        <option value="services">Services</option>
+                        <option value="entertainment">Entertainment</option>
+                        <option value="automotive">Automotive</option>
+                        <option value="health">Health & Wellness</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
                   </div>
 
                   {/* Contact Name */}
@@ -431,20 +440,33 @@ const BusinessSignup: React.FC = () => {
                       <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-2">
                         State
                       </label>
-                      <select
-                        id="state"
-                        name="state"
-                        value={formData.state}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 transition-colors"
-                        required
-                      >
-                        <option value="">State</option>
-                        <option value="MI">Michigan</option>
-                        <option value="OH">Ohio</option>
-                        <option value="IN">Indiana</option>
-                        {/* Add more states as needed */}
-                      </select>
+                      <div className="relative">
+                        <MapPin size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+                        <select
+                          id="state"
+                          name="state"
+                          value={formData.state}
+                          onChange={handleInputChange}
+                          className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white transition-colors appearance-none"
+                          required
+                          style={{
+                            backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                            backgroundPosition: 'right 0.75rem center',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundSize: '1.5em 1.5em',
+                          }}
+                        >
+                          <option value="">Select state</option>
+                          <option value="MI">Michigan</option>
+                          <option value="OH">Ohio</option>
+                          <option value="IN">Indiana</option>
+                          <option value="IL">Illinois</option>
+                          <option value="WI">Wisconsin</option>
+                          <option value="PA">Pennsylvania</option>
+                          <option value="NY">New York</option>
+                          {/* Add more states as needed */}
+                        </select>
+                      </div>
                     </div>
 
                     <div>

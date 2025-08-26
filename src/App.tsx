@@ -10,6 +10,9 @@ import Contact from './pages/Contact'
 import SignIn from './pages/SignIn'
 import CustomerSignup from './pages/CustomerSignup'
 import BusinessSignup from './pages/BusinessSignup'
+import CustomerDashboard from './pages/CustomerDashboard'
+import BusinessDashboard from './pages/BusinessDashboard'
+import AdminDashboard from './pages/AdminDashboard'
 
 function App() {
   return (
@@ -27,6 +30,10 @@ function App() {
               <Route path="/signin" element={<SignIn />} />
               <Route path="/customer-signup" element={<CustomerSignup />} />
               <Route path="/business-signup" element={<BusinessSignup />} />
+              {/* Dashboard Routes */}
+              <Route path="/dashboard" element={<CustomerDashboard />} />
+              <Route path="/business-dashboard" element={<BusinessDashboard />} />
+              <Route path="/admin" element={<AdminDashboard />} />
             </Routes>
           </main>
           <Footer />

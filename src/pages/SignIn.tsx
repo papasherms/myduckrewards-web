@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { LogIn, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { getUserProfile } from '../lib/supabase'
 import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
 
@@ -47,13 +48,22 @@ const SignIn: React.FC = () => {
     setError('')
 
     try {
-      const { error } = await signIn(formData.email, formData.password)
+      const { error, data } = await signIn(formData.email, formData.password)
       
       if (error) {
         setError(error.message || 'Failed to sign in')
-      } else {
-        // Redirect to dashboard or home page
-        navigate('/')
+      } else if (data?.user) {
+        // Get user profile to determine user type
+        const { data: profile } = await getUserProfile(data.user.id)
+        
+        // Redirect based on user type
+        if (profile?.user_type === 'admin') {
+          navigate('/admin')
+        } else if (profile?.user_type === 'business') {
+          navigate('/business-dashboard')
+        } else {
+          navigate('/dashboard')
+        }
       }
     } catch (err) {
       setError('An unexpected error occurred')

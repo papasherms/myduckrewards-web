@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { Menu, X, User, Building, LogIn, LogOut, Settings } from 'lucide-react'
+import { Menu, X, User, Building, LogIn, LogOut, Settings, Shield } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAuth } from '../contexts/AuthContext'
 import AnimatedButton from './AnimatedButton'
@@ -9,7 +9,15 @@ const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = React.useState(false)
   const location = useLocation()
-  const { user, signOut } = useAuth()
+  const { user, userProfile, signOut } = useAuth()
+  
+  // Determine dashboard path based on user type
+  const getDashboardPath = () => {
+    if (!userProfile) return '/dashboard'
+    if (userProfile.user_type === 'admin') return '/admin'
+    if (userProfile.user_type === 'business') return '/business-dashboard'
+    return '/dashboard'
+  }
 
   const navItems = [
     { name: 'Home', path: '/' },
@@ -82,9 +90,15 @@ const Header: React.FC = () => {
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                   className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-duck-50 text-duck-700 hover:bg-duck-100 transition-colors"
                 >
-                  <User size={16} />
+                  {userProfile?.user_type === 'admin' ? (
+                    <Shield size={16} />
+                  ) : userProfile?.user_type === 'business' ? (
+                    <Building size={16} />
+                  ) : (
+                    <User size={16} />
+                  )}
                   <span className="text-sm font-medium">
-                    {user.first_name || user.email.split('@')[0]}
+                    {userProfile?.first_name || user.email?.split('@')[0] || 'User'}
                   </span>
                   <motion.div
                     animate={{ rotate: isUserMenuOpen ? 180 : 0 }}
@@ -103,12 +117,12 @@ const Header: React.FC = () => {
                       className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50"
                     >
                       <Link
-                        to="/dashboard"
+                        to={getDashboardPath()}
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         onClick={() => setIsUserMenuOpen(false)}
                       >
                         <Settings size={16} className="mr-2" />
-                        Dashboard
+                        {userProfile?.user_type === 'admin' ? 'Admin Panel' : 'Dashboard'}
                       </Link>
                       <button
                         onClick={handleSignOut}
@@ -208,42 +222,75 @@ const Header: React.FC = () => {
                   ))}
                 </div>
 
-                {/* Mobile Auth Buttons */}
+                {/* Mobile Auth Section */}
                 <div className="pt-4 space-y-3 border-t border-gray-200">
-                  <Link to="/signin" onClick={() => setIsMenuOpen(false)}>
-                    <AnimatedButton
-                      variant="outline"
-                      size="md"
-                      icon={<LogIn size={18} />}
-                      className="w-full justify-center border-gray-300 text-gray-700"
-                    >
-                      Sign In
-                    </AnimatedButton>
-                  </Link>
-                  
-                  <div className="grid grid-cols-2 gap-3">
-                    <Link to="/customer-signup" onClick={() => setIsMenuOpen(false)}>
-                      <AnimatedButton
-                        variant="secondary"
-                        size="md"
-                        icon={<User size={18} />}
-                        className="justify-center"
+                  {user ? (
+                    <>
+                      <Link 
+                        to={getDashboardPath()} 
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block px-4 py-3 rounded-xl bg-duck-50 text-duck-700 text-center font-medium"
                       >
-                        Customer
-                      </AnimatedButton>
-                    </Link>
-                    
-                    <Link to="/business-signup" onClick={() => setIsMenuOpen(false)}>
-                      <AnimatedButton
-                        variant="primary"
-                        size="md"
-                        icon={<Building size={18} />}
-                        className="justify-center"
+                        <div className="flex items-center justify-center space-x-2">
+                          {userProfile?.user_type === 'admin' ? (
+                            <Shield size={18} />
+                          ) : userProfile?.user_type === 'business' ? (
+                            <Building size={18} />
+                          ) : (
+                            <User size={18} />
+                          )}
+                          <span>{userProfile?.user_type === 'admin' ? 'Admin Panel' : 'Dashboard'}</span>
+                        </div>
+                      </Link>
+                      <button
+                        onClick={() => {
+                          handleSignOut()
+                          setIsMenuOpen(false)
+                        }}
+                        className="w-full px-4 py-3 rounded-xl bg-red-50 text-red-600 text-center font-medium flex items-center justify-center space-x-2"
                       >
-                        Business
-                      </AnimatedButton>
-                    </Link>
-                  </div>
+                        <LogOut size={18} />
+                        <span>Sign Out</span>
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link to="/signin" onClick={() => setIsMenuOpen(false)}>
+                        <AnimatedButton
+                          variant="outline"
+                          size="md"
+                          icon={<LogIn size={18} />}
+                          className="w-full justify-center border-gray-300 text-gray-700"
+                        >
+                          Sign In
+                        </AnimatedButton>
+                      </Link>
+                      
+                      <div className="flex gap-2">
+                        <Link to="/customer-signup" onClick={() => setIsMenuOpen(false)} className="flex-1">
+                          <AnimatedButton
+                            variant="secondary"
+                            size="md"
+                            icon={<User size={18} />}
+                            className="w-full justify-center"
+                          >
+                            Customer
+                          </AnimatedButton>
+                        </Link>
+                        
+                        <Link to="/business-signup" onClick={() => setIsMenuOpen(false)} className="flex-1">
+                          <AnimatedButton
+                            variant="primary"
+                            size="md"
+                            icon={<Building size={18} />}
+                            className="w-full justify-center"
+                          >
+                            Business
+                          </AnimatedButton>
+                        </Link>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </motion.div>

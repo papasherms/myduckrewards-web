@@ -13,21 +13,22 @@
 - **Database Schema**: PostgreSQL schema deployed to Supabase
 - **Authentication Backend**: Supabase auth fully integrated
 - **Customer Registration**: Working signup form → database
+- **Business Registration**: Connected to Supabase with membership tiers
 - **User Login**: Working signin form → session management
-- **Header UI**: Shows user menu when authenticated
+- **Header UI**: Shows user menu when authenticated, routes by user type
 - **Security**: Row Level Security (RLS) policies implemented
+- **Dashboard Pages**: Customer, Business, and Admin dashboards created
 
 ### ⚠️ PARTIALLY COMPLETE - Needs Connection
-- **Business Signup Form**: UI exists, needs Supabase integration
 - **Contact Form**: Static form, needs backend/email service
-- **User Dashboards**: Need to create authenticated areas
+- **Dashboard Features**: Static UI, needs real data integration
 
 ### 🔄 TODO - Next Priorities
-1. Connect Business signup form to Supabase
-2. Create customer dashboard page
-3. Create business dashboard page
-4. Implement duck management system
-5. Add payment processing (Stripe)
+1. Fetch and display real data in dashboards
+2. Implement duck management system
+3. Create Duck Alert functionality
+4. Add payment processing (Stripe)
+5. Connect contact form to email service
 
 ## 🗄️ Database Structure
 
@@ -60,14 +61,17 @@
 
 ### Authentication System (✅ Complete)
 - `src/lib/supabase.ts` - Client configuration + helper functions
-- `src/contexts/AuthContext.tsx` - React context for auth state
-- `src/types/auth.ts` - TypeScript interfaces
-- `src/App.tsx` - Wrapped with AuthProvider
+- `src/contexts/AuthContext.tsx` - React context for auth state, includes userProfile
+- `src/types/auth.ts` - TypeScript interfaces with AuthSession type
+- `src/App.tsx` - Wrapped with AuthProvider, includes dashboard routes
 
 ### Pages Status
-- `src/pages/SignIn.tsx` - ✅ Connected to Supabase
+- `src/pages/SignIn.tsx` - ✅ Connected to Supabase, routes by user type
 - `src/pages/CustomerSignup.tsx` - ✅ Connected to Supabase  
-- `src/pages/BusinessSignup.tsx` - ⚠️ Needs Supabase connection
+- `src/pages/BusinessSignup.tsx` - ✅ Connected to Supabase with membership tiers
+- `src/pages/CustomerDashboard.tsx` - ✅ UI complete, needs data integration
+- `src/pages/BusinessDashboard.tsx` - ✅ UI complete, needs data integration
+- `src/pages/AdminDashboard.tsx` - ✅ UI complete for Jim & owners
 - `src/pages/Contact.tsx` - ⚠️ Static form, needs backend
 - All other pages - ✅ Complete UI/styling
 
