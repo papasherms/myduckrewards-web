@@ -161,7 +161,7 @@ const AdminDashboard: React.FC = () => {
         alert('Failed to suspend user: ' + error.message)
       } else {
         alert('User suspended successfully')
-        await fetchUsers()
+        await fetchAllUsers()
       }
     } catch (err) {
       console.error('Error:', err)
@@ -182,7 +182,7 @@ const AdminDashboard: React.FC = () => {
         alert('Failed to delete user: ' + error.message)
       } else {
         alert('User deleted successfully')
-        await fetchUsers()
+        await fetchAllUsers()
       }
     } catch (err) {
       console.error('Error:', err)
