@@ -6,9 +6,9 @@ const Business: React.FC = () => {
     {
       name: 'Basic',
       price: 'Quarterly',
-      bgColor: 'bg-white',
-      borderColor: 'border-gray-200',
-      textColor: 'text-gray-900',
+      bgColor: 'bg-gray-50 dark:bg-gray-800',
+      borderColor: 'border-gray-300 dark:border-gray-600',
+      textColor: 'text-gray-900 dark:text-gray-100',
       features: [
         'Random duck association',
         'Quarterly billing',
@@ -62,7 +62,7 @@ const Business: React.FC = () => {
           </p>
         </div>
 
-        <div className="bg-duck-yellow text-white py-12 px-8 rounded-lg mb-16 text-center">
+        <div className="bg-gradient-to-r from-duck-500 to-orange-500 text-white py-12 px-8 rounded-lg mb-16 text-center shadow-xl">
           <h2 className="text-2xl font-bold mb-4">First 3 Months FREE!</h2>
           <p className="text-lg">
             Try our platform risk-free for the first three months. See the results before you commit.
@@ -82,22 +82,22 @@ const Business: React.FC = () => {
                   </div>
                 )}
                 <div className="text-center mb-6">
-                  <IconComponent size={48} className={`mx-auto mb-4 ${tier.textColor === 'text-white' ? 'text-white' : 'text-duck-500'}`} />
+                  <IconComponent size={48} className={`mx-auto mb-4 ${tier.textColor === 'text-white' ? 'text-white' : 'text-duck-500 dark:text-duck-400'}`} />
                   <h3 className={`text-2xl font-bold ${tier.textColor}`}>{tier.name}</h3>
                   <p className={`text-lg ${tier.textColor} opacity-75`}>{tier.price} Billing</p>
                 </div>
                 <ul className="space-y-3 mb-8">
                   {tier.features.map((feature, idx) => (
                     <li key={idx} className="flex items-start">
-                      <CheckCircle size={16} className={`mr-3 mt-1 ${tier.textColor === 'text-white' ? 'text-white' : 'text-green-500'}`} />
-                      <span className={tier.textColor}>{feature}</span>
+                      <CheckCircle size={16} className={`mr-3 mt-1 ${tier.textColor === 'text-white' ? 'text-white' : tier.textColor.includes('dark:') ? 'text-green-500 dark:text-green-400' : 'text-green-500'}`} />
+                      <span className={`${tier.textColor} ${tier.name === 'Basic' ? 'text-gray-700 dark:text-gray-300' : ''}`}>{feature}</span>
                     </li>
                   ))}
                 </ul>
-                <button className={`w-full py-3 px-6 rounded-xl font-medium transition-colors ${
+                <button className={`w-full py-3 px-6 rounded-xl font-medium transition-all shadow-md hover:shadow-lg ${
                   tier.textColor === 'text-white' 
-                    ? 'bg-white text-gray-900 hover:bg-gray-100' 
-                    : 'bg-duck-500 text-white hover:bg-duck-600'
+                    ? 'bg-white/90 text-gray-900 hover:bg-white' 
+                    : 'bg-gradient-to-r from-duck-500 to-orange-500 text-white hover:from-duck-600 hover:to-orange-600'
                 }`}>
                   Get Started
                 </button>
@@ -115,29 +115,29 @@ const Business: React.FC = () => {
               <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Zap size={32} className="text-white" />
               </div>
-              <h3 className="font-semibold mb-2">Instant Exposure</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">All machines in your zip code feature your offer on launch day</p>
+              <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Instant Exposure</h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">All machines in your zip code feature your offer on launch day</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-duck-500 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Mail size={32} className="text-white" />
               </div>
-              <h3 className="font-semibold mb-2">Duck Alerts</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Send targeted promotions directly to customers in your area</p>
+              <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Duck Alerts</h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">Send targeted promotions directly to customers in your area</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <CheckCircle size={32} className="text-white" />
               </div>
-              <h3 className="font-semibold mb-2">Analytics</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Track redemptions, customer demographics, and ROI</p>
+              <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Analytics</h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">Track redemptions, customer demographics, and ROI</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Crown size={32} className="text-white" />
               </div>
-              <h3 className="font-semibold mb-2">Social Media</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Customers share photos with their ducks at your location</p>
+              <h3 className="font-semibold mb-2 text-gray-900 dark:text-white">Social Media</h3>
+              <p className="text-gray-700 dark:text-gray-300 text-sm">Customers share photos with their ducks at your location</p>
             </div>
           </div>
         </div>
@@ -149,10 +149,10 @@ const Business: React.FC = () => {
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
             Contact us today to learn more about partnership opportunities
           </p>
-          <button className="bg-duck-blue text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-600 transition-colors mr-4">
+          <button className="bg-gradient-to-r from-duck-500 to-orange-500 hover:from-duck-600 hover:to-orange-600 text-white px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all mr-4">
             Contact Sales
           </button>
-          <button className="border-2 border-duck-blue text-duck-blue px-8 py-3 rounded-lg font-medium hover:bg-duck-blue hover:text-white transition-colors">
+          <button className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all">
             View Case Studies
           </button>
         </div>
