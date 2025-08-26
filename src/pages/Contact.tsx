@@ -121,7 +121,7 @@ const Contact: React.FC = () => {
                 <select
                   id="subject"
                   name="subject"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white transition-colors appearance-none"
+                  className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
                   required
                   style={{
                     backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
@@ -155,7 +155,7 @@ const Contact: React.FC = () => {
 
               <button
                 type="submit"
-                className="w-full bg-duck-blue text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors"
+                className="w-full bg-gradient-to-r from-duck-500 to-orange-500 hover:from-duck-600 hover:to-orange-600 text-white py-3 px-6 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all"
               >
                 Send Message
               </button>
@@ -171,7 +171,7 @@ const Contact: React.FC = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-8">
             Currently available at Leo's locations throughout Southeast Michigan
           </p>
-          <button className="bg-duck-yellow text-white px-8 py-3 rounded-lg font-medium hover:bg-yellow-500 transition-colors">
+          <button className="bg-gradient-to-r from-duck-500 to-orange-500 hover:from-duck-600 hover:to-orange-600 text-white px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all">
             View All Locations
           </button>
         </div>
