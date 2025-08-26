@@ -302,10 +302,10 @@ const Home: React.FC = () => {
               </Link>
               <Link to="/locations">
                 <AnimatedButton 
-                  variant="primary" 
+                  variant="secondary" 
                   size="xl" 
                   icon={<MapPin size={24} />}
-                  className="bg-white text-duck-600 hover:bg-gray-100 dark:bg-gray-800 dark:text-duck-400 dark:hover:bg-gray-700 shadow-lg"
+                  className="bg-white !text-duck-600 hover:bg-gray-100 dark:bg-gray-800 dark:!text-white dark:hover:bg-gray-700 shadow-lg border-0"
                 >
                   Find Locations
                 </AnimatedButton>

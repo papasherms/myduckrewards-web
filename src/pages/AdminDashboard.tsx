@@ -19,7 +19,9 @@ import {
   Plus,
   Check,
   X,
-  AlertCircle
+  AlertCircle,
+  Search,
+  Filter
 } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
 import { AddUserModal, AddBusinessModal, AddLocationModal } from '../components/AdminModals'
@@ -38,6 +40,9 @@ const AdminDashboard: React.FC = () => {
   const [showAddUserModal, setShowAddUserModal] = useState(false)
   const [showAddBusinessModal, setShowAddBusinessModal] = useState(false)
   const [showAddLocationModal, setShowAddLocationModal] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [filterType, setFilterType] = useState('all')
+  const [sortBy, setSortBy] = useState('created_at')
 
   useEffect(() => {
     if (!user || userProfile?.user_type !== 'admin') {
@@ -149,23 +154,38 @@ const AdminDashboard: React.FC = () => {
   }
 
   const suspendUser = async (userId: string) => {
+    const reason = prompt('Please provide a reason for suspending this user:')
+    if (!reason) return
+    
     setLoading(true)
     try {
+      // First get the current user to check status
+      const { data: userData } = await supabase
+        .from('users')
+        .select('is_active')
+        .eq('id', userId)
+        .single()
+      
+      const newStatus = !userData?.is_active
+      
       const { error } = await supabase
         .from('users')
-        .update({ is_active: false })
+        .update({ 
+          is_active: newStatus,
+          updated_at: new Date().toISOString()
+        })
         .eq('id', userId)
       
       if (error) {
-        console.error('Error suspending user:', error)
-        alert('Failed to suspend user: ' + error.message)
+        console.error('Error toggling user status:', error)
+        alert('Failed to update user status: ' + error.message)
       } else {
-        alert('User suspended successfully')
+        alert(newStatus ? 'User activated successfully' : 'User suspended successfully')
         await fetchAllUsers()
       }
     } catch (err) {
       console.error('Error:', err)
-      alert('An error occurred while suspending the user')
+      alert('An error occurred while updating the user status')
     } finally {
       setLoading(false)
     }
@@ -174,12 +194,25 @@ const AdminDashboard: React.FC = () => {
   const deleteUser = async (userId: string) => {
     setLoading(true)
     try {
-      // First delete from auth.users (this will cascade to public.users)
-      const { error } = await supabase.auth.admin.deleteUser(userId)
+      // Use RPC function to delete user with proper permissions
+      const { error } = await supabase.rpc('delete_user_admin', {
+        user_id: userId
+      })
       
       if (error) {
         console.error('Error deleting user:', error)
-        alert('Failed to delete user: ' + error.message)
+        // If RPC doesn't exist, try direct delete from public.users
+        const { error: deleteError } = await supabase
+          .from('users')
+          .delete()
+          .eq('id', userId)
+        
+        if (deleteError) {
+          alert('Cannot delete user. This requires service role permissions. Please contact system administrator.')
+        } else {
+          alert('User profile deleted successfully')
+          await fetchAllUsers()
+        }
       } else {
         alert('User deleted successfully')
         await fetchAllUsers()
@@ -392,6 +425,42 @@ const AdminDashboard: React.FC = () => {
                     Add User
                   </AnimatedButton>
                 </div>
+                
+                {/* Search and Filter Bar */}
+                <div className="bg-gray-700/30 rounded-lg p-4 mb-4">
+                  <div className="flex flex-col md:flex-row gap-4">
+                    <div className="flex-1 relative">
+                      <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <input
+                        type="text"
+                        placeholder="Search by name, email, or ID..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:border-duck-500 focus:outline-none"
+                      />
+                    </div>
+                    <select
+                      value={filterType}
+                      onChange={(e) => setFilterType(e.target.value)}
+                      className="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-duck-500 focus:outline-none"
+                    >
+                      <option value="all">All Types</option>
+                      <option value="customer">Customers</option>
+                      <option value="business">Business</option>
+                      <option value="admin">Admins</option>
+                    </select>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:border-duck-500 focus:outline-none"
+                    >
+                      <option value="created_at">Date Created</option>
+                      <option value="name">Name</option>
+                      <option value="email">Email</option>
+                      <option value="user_type">Type</option>
+                    </select>
+                  </div>
+                </div>
                 {allUsers.length === 0 ? (
                   <div className="bg-gray-700/30 rounded-lg p-6">
                     <p className="text-gray-400 text-center">No users to display</p>
@@ -410,7 +479,34 @@ const AdminDashboard: React.FC = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {allUsers.map((user, index) => (
+                        {allUsers
+                          .filter(user => {
+                            // Filter by search term
+                            const matchesSearch = searchTerm === '' || 
+                              user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              user.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              user.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                              user.id?.toLowerCase().includes(searchTerm.toLowerCase())
+                            
+                            // Filter by type
+                            const matchesType = filterType === 'all' || user.user_type === filterType
+                            
+                            return matchesSearch && matchesType
+                          })
+                          .sort((a, b) => {
+                            switch(sortBy) {
+                              case 'name':
+                                return (a.first_name + a.last_name).localeCompare(b.first_name + b.last_name)
+                              case 'email':
+                                return a.email.localeCompare(b.email)
+                              case 'user_type':
+                                return (a.user_type || '').localeCompare(b.user_type || '')
+                              case 'created_at':
+                              default:
+                                return new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+                            }
+                          })
+                          .map((user, index) => (
                           <tr key={user.id} className={index % 2 === 0 ? 'bg-gray-700/20' : 'bg-gray-700/10'}>
                             <td className="p-4 text-white">
                               {user.first_name} {user.last_name}
@@ -426,8 +522,10 @@ const AdminDashboard: React.FC = () => {
                               </span>
                             </td>
                             <td className="p-4">
-                              <span className="px-2 py-1 rounded text-xs font-medium bg-green-900 text-green-200">
-                                Active
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                user.is_active !== false ? 'bg-green-900 text-green-200' : 'bg-red-900 text-red-200'
+                              }`}>
+                                {user.is_active !== false ? 'Active' : 'Suspended'}
                               </span>
                             </td>
                             <td className="p-4 text-gray-400 text-sm">

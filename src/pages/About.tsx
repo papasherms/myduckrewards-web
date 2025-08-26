@@ -310,7 +310,7 @@ const About: React.FC = () => {
                 <AnimatedButton 
                   variant="secondary"
                   size="xl"
-                  className="bg-white text-duck-600 hover:bg-duck-50 dark:bg-gray-800 dark:text-duck-400 dark:hover:bg-gray-700 border-0"
+                  className="!bg-white !text-duck-600 hover:!bg-duck-50 dark:!bg-gray-800 dark:!text-white dark:hover:!bg-gray-700 border-0"
                 >
                   Become a Partner
                 </AnimatedButton>
