@@ -1,14 +1,20 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { Building, User, Mail, Lock, Phone, MapPin, Globe, Eye, EyeOff, CheckCircle } from 'lucide-react'
+import { Link, useNavigate } from 'react-router-dom'
+import { Building, User, Mail, Lock, Phone, MapPin, Globe, Eye, EyeOff, CheckCircle, AlertCircle } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
+import { useAuth } from '../contexts/AuthContext'
+import { createBusiness } from '../lib/supabase'
 
 const BusinessSignup: React.FC = () => {
+  const navigate = useNavigate()
+  const { signUp } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [step, setStep] = useState(1)
   const [selectedPlan, setSelectedPlan] = useState<'basic' | 'trade' | 'custom'>('trade')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const [formData, setFormData] = useState({
     businessName: '',
     businessType: '',
@@ -76,13 +82,63 @@ const BusinessSignup: React.FC = () => {
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    
     if (step < 3) {
       setStep(step + 1)
     } else {
-      // Handle signup logic here
-      console.log('Business signup:', { ...formData, plan: selectedPlan })
+      // Final step - create account
+      setLoading(true)
+      setError('')
+      
+      try {
+        // Step 1: Sign up the user
+        const signUpResult = await signUp(formData.email, formData.password, 'business', {
+          first_name: formData.contactName.split(' ')[0] || '',
+          last_name: formData.contactName.split(' ').slice(1).join(' ') || '',
+          phone: formData.phone,
+          zip_code: formData.zipCode
+        })
+
+        if (signUpResult.error) {
+          throw signUpResult.error
+        }
+
+        if (signUpResult.data?.user) {
+          // Step 2: Create the business record
+          const businessResult = await createBusiness({
+            user_id: signUpResult.data.user.id,
+            business_name: formData.businessName,
+            business_type: formData.businessType,
+            contact_name: formData.contactName,
+            email: formData.email,
+            phone: formData.phone,
+            website: formData.website,
+            address: formData.address,
+            city: formData.city,
+            state: formData.state,
+            zip_code: formData.zipCode,
+            membership_tier: selectedPlan,
+            membership_start_date: new Date().toISOString(),
+            membership_end_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), // 3 months free
+            duck_alerts_remaining: selectedPlan === 'custom' ? 4 : selectedPlan === 'trade' ? 2 : 1,
+            is_active: true
+          })
+
+          if (businessResult.error) {
+            throw businessResult.error
+          }
+
+          // Success - redirect to sign in
+          navigate('/signin?registered=true&type=business')
+        }
+      } catch (err: any) {
+        console.error('Business signup error:', err)
+        setError(err.message || 'Failed to create account. Please try again.')
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
@@ -129,6 +185,18 @@ const BusinessSignup: React.FC = () => {
 
         <AnimatedCard>
           <div className="p-8">
+            {/* Error Message */}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start"
+              >
+                <AlertCircle className="text-red-500 mr-3 mt-0.5" size={20} />
+                <div className="text-red-700 text-sm">{error}</div>
+              </motion.div>
+            )}
+
             {step === 1 && (
               <motion.div
                 variants={stepVariants}
@@ -479,30 +547,32 @@ const BusinessSignup: React.FC = () => {
             )}
 
             {/* Navigation */}
-            <div className="flex gap-3 mt-8">
-              {step > 1 && (
+            <form onSubmit={handleSubmit}>
+              <div className="flex gap-3 mt-8">
+                {step > 1 && (
+                  <AnimatedButton
+                    type="button"
+                    variant="outline"
+                    size="lg"
+                    className="flex-1"
+                    onClick={() => setStep(step - 1)}
+                  >
+                    Back
+                  </AnimatedButton>
+                )}
+                
                 <AnimatedButton
-                  type="button"
-                  variant="outline"
+                  type="submit"
+                  variant="primary"
                   size="lg"
                   className="flex-1"
-                  onClick={() => setStep(step - 1)}
+                  icon={step === 3 ? <Building size={20} /> : undefined}
+                  disabled={loading || (step === 3 && !formData.agreeToTerms)}
                 >
-                  Back
+                  {loading ? 'Creating Account...' : step === 3 ? 'Create Partnership' : 'Continue'}
                 </AnimatedButton>
-              )}
-              
-              <AnimatedButton
-                type="submit"
-                variant="primary"
-                size="lg"
-                className="flex-1"
-                onClick={() => handleSubmit({} as React.FormEvent)}
-                icon={step === 3 ? <Building size={20} /> : undefined}
-              >
-                {step === 3 ? 'Create Partnership' : 'Continue'}
-              </AnimatedButton>
-            </div>
+              </div>
+            </form>
           </div>
         </AnimatedCard>
 

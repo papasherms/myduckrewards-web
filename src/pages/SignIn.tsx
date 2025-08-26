@@ -1,15 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Link, useNavigate } from 'react-router-dom'
-import { LogIn, Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { LogIn, Mail, Lock, Eye, EyeOff, ArrowRight, CheckCircle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
 
 const SignIn: React.FC = () => {
+  const [searchParams] = useSearchParams()
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -17,6 +19,18 @@ const SignIn: React.FC = () => {
   
   const { signIn } = useAuth()
   const navigate = useNavigate()
+
+  // Check for registration success message
+  useEffect(() => {
+    if (searchParams.get('registered') === 'true') {
+      const type = searchParams.get('type')
+      if (type === 'business') {
+        setSuccessMessage('🎉 Business account created successfully! Please check your email to verify your account, then sign in.')
+      } else {
+        setSuccessMessage('🎉 Account created successfully! Please check your email to verify your account, then sign in.')
+      }
+    }
+  }, [searchParams])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -65,6 +79,18 @@ const SignIn: React.FC = () => {
 
         <AnimatedCard>
           <div className="p-8">
+            {/* Success Message */}
+            {successMessage && (
+              <motion.div
+                className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6 flex items-start"
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+              >
+                <CheckCircle className="mr-2 mt-0.5" size={20} />
+                <div>{successMessage}</div>
+              </motion.div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Error Message */}
               {error && (
