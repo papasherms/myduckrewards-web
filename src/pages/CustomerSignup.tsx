@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
-import { User, Mail, Lock, Phone, MapPin, Calendar, Eye, EyeOff } from 'lucide-react'
+import { User, Mail, Lock, Phone, MapPin, Calendar, Eye, EyeOff, CheckCircle, ArrowRight } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import AnimatedButton from '../components/AnimatedButton'
 import AnimatedCard from '../components/AnimatedCard'
@@ -12,6 +12,7 @@ const CustomerSignup: React.FC = () => {
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [signupSuccess, setSignupSuccess] = useState(false)
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -73,7 +74,8 @@ const CustomerSignup: React.FC = () => {
         if (error) {
           setError(error.message || 'Failed to create account')
         } else {
-          navigate('/signin?message=Account created! Please check your email to verify your account.')
+          setSignupSuccess(true)
+          setStep(3) // Move to success step
         }
       } catch (err) {
         setError('An unexpected error occurred')
@@ -105,20 +107,22 @@ const CustomerSignup: React.FC = () => {
         </motion.div>
 
         {/* Progress Bar */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-600 dark:text-gray-400">Step {step} of 2</span>
-            <span className="text-sm text-gray-600 dark:text-gray-400">{step === 1 ? 'Basic Info' : 'Create Account'}</span>
+        {step < 3 && (
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm text-gray-600 dark:text-gray-400">Step {step} of 2</span>
+              <span className="text-sm text-gray-600 dark:text-gray-400">{step === 1 ? 'Basic Info' : 'Create Account'}</span>
+            </div>
+            <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+              <motion.div
+                className="bg-gradient-to-r from-duck-500 to-orange-500 h-2 rounded-full"
+                initial={{ width: '50%' }}
+                animate={{ width: step === 1 ? '50%' : '100%' }}
+                transition={{ duration: 0.5 }}
+              />
+            </div>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <motion.div
-              className="bg-gradient-to-r from-duck-500 to-orange-500 h-2 rounded-full"
-              initial={{ width: '50%' }}
-              animate={{ width: step === 1 ? '50%' : '100%' }}
-              transition={{ duration: 0.5 }}
-            />
-          </div>
-        </div>
+        )}
 
         <AnimatedCard>
           <div className="p-8">
@@ -366,7 +370,69 @@ const CustomerSignup: React.FC = () => {
                 </motion.div>
               )}
 
+              {/* Step 3: Success Message */}
+              {step === 3 && signupSuccess && (
+                <motion.div
+                  variants={stepVariants}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  className="text-center py-8"
+                >
+                  <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Mail size={40} className="text-green-500" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                    Check Your Email!
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-400 mb-6">
+                    We've sent a verification email to<br />
+                    <span className="font-semibold text-gray-900 dark:text-white">{formData.email}</span>
+                  </p>
+                  <div className="bg-duck-50 dark:bg-duck-900/20 border border-duck-200 dark:border-duck-700 rounded-xl p-6 mb-6 text-left">
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-3">Next Steps:</h4>
+                    <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+                      <li className="flex items-start">
+                        <CheckCircle size={16} className="text-duck-500 mr-2 mt-0.5 flex-shrink-0" />
+                        <span>Open your email inbox and look for our message</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle size={16} className="text-duck-500 mr-2 mt-0.5 flex-shrink-0" />
+                        <span>Click the verification link in the email</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle size={16} className="text-duck-500 mr-2 mt-0.5 flex-shrink-0" />
+                        <span>Once verified, you can sign in to your account</span>
+                      </li>
+                      <li className="flex items-start">
+                        <CheckCircle size={16} className="text-duck-500 mr-2 mt-0.5 flex-shrink-0" />
+                        <span>Start collecting ducks and earning rewards!</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg p-4 mb-6">
+                    <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                      <strong>Didn't receive the email?</strong> Check your spam folder or wait a few minutes. 
+                      The email should arrive within 5 minutes.
+                    </p>
+                  </div>
+                  <div className="flex gap-3">
+                    <Link to="/signin" className="flex-1">
+                      <AnimatedButton 
+                        variant="primary" 
+                        size="lg" 
+                        className="w-full"
+                        icon={<ArrowRight size={20} />}
+                      >
+                        Go to Sign In
+                      </AnimatedButton>
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+
               {/* Navigation Buttons */}
+              {step < 3 && (
               <div className="flex gap-3">
                 {step === 2 && (
                   <AnimatedButton
@@ -390,6 +456,7 @@ const CustomerSignup: React.FC = () => {
                   {loading ? 'Creating Account...' : (step === 1 ? 'Continue' : 'Create Account')}
                 </AnimatedButton>
               </div>
+              )}
             </form>
           </div>
         </AnimatedCard>
