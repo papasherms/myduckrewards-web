@@ -223,7 +223,11 @@ const Home: React.FC = () => {
               <AnimatedCard key={index} delay={index * 0.3} direction="up">
                 <div className="p-8 text-center relative">
                   <div className="relative mb-6">
-                    <div className={`w-16 h-16 bg-gradient-to-r from-${item.color}-500 to-${item.color}-600 rounded-full flex items-center justify-center mx-auto text-white font-bold text-2xl shadow-lg`}>
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center mx-auto text-white font-bold text-2xl shadow-lg ${
+                      item.color === 'duck' ? 'bg-gradient-to-r from-duck-500 to-duck-600' :
+                      item.color === 'blue' ? 'bg-gradient-to-r from-blue-500 to-blue-600' :
+                      'bg-gradient-to-r from-orange-500 to-orange-600'
+                    }`}>
                       {item.step}
                     </div>
                     <div className="absolute -top-2 -right-2 text-3xl">{item.emoji}</div>

@@ -119,8 +119,8 @@ const HowItWorks: React.FC = () => {
                       {step.icon}
                     </div>
                     <div className="absolute -top-2 -right-2 text-3xl">{step.emoji}</div>
-                    <div className="absolute -bottom-2 -left-2 bg-white border-2 border-gray-200 rounded-full w-8 h-8 flex items-center justify-center">
-                      <span className="text-sm font-bold text-gray-700">{step.step}</span>
+                    <div className="absolute -bottom-2 -left-2 bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-600 rounded-full w-8 h-8 flex items-center justify-center">
+                      <span className="text-sm font-bold text-gray-700 dark:text-gray-300">{step.step}</span>
                     </div>
                   </div>
                   <h3 className="text-xl font-bold mb-3 text-gray-900 dark:text-white">{step.title}</h3>
@@ -171,7 +171,7 @@ const HowItWorks: React.FC = () => {
                 {instantRewards.map((reward, index) => (
                   <motion.div
                     key={index}
-                    className="flex items-center p-4 bg-white rounded-xl shadow-sm"
+                    className="flex items-center p-4 bg-white dark:bg-gray-700 rounded-xl shadow-sm dark:shadow-gray-800/30"
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -203,7 +203,7 @@ const HowItWorks: React.FC = () => {
                 {businessRewards.map((reward, index) => (
                   <motion.div
                     key={index}
-                    className="flex items-center p-4 bg-white rounded-xl shadow-sm"
+                    className="flex items-center p-4 bg-white dark:bg-gray-700 rounded-xl shadow-sm dark:shadow-gray-800/30"
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
@@ -294,7 +294,7 @@ const HowItWorks: React.FC = () => {
                 </AnimatedButton>
               </Link>
               <Link to="/customer-signup">
-                <AnimatedButton variant="outline" size="xl" icon={<Star size={24} />}>
+                <AnimatedButton variant="primary" size="xl" icon={<Star size={24} />}>
                   Sign Up Now
                 </AnimatedButton>
               </Link>

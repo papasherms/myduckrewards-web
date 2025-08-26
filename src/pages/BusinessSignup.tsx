@@ -163,7 +163,7 @@ const BusinessSignup: React.FC = () => {
           <div className="text-6xl mb-4">🤝</div>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Partner with MyDuckRewards</h2>
           <p className="text-gray-600 dark:text-gray-400">Drive traffic and boost sales with our gamified platform</p>
-          <div className="mt-4 inline-flex items-center px-4 py-2 bg-duck-100 rounded-full text-sm font-medium text-duck-800">
+          <div className="mt-4 inline-flex items-center px-4 py-2 bg-duck-100 dark:bg-duck-900/30 rounded-full text-sm font-medium text-duck-800 dark:text-duck-200">
             🎉 First 3 months FREE!
           </div>
         </motion.div>
@@ -192,7 +192,7 @@ const BusinessSignup: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start"
+                className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-xl flex items-start"
               >
                 <AlertCircle className="text-red-500 mr-3 mt-0.5" size={20} />
                 <div className="text-red-700 dark:text-red-400 text-sm">{error}</div>
@@ -212,10 +212,10 @@ const BusinessSignup: React.FC = () => {
                   {membershipPlans.map((plan) => (
                     <motion.div
                       key={plan.id}
-                      className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all ${
+                      className={`relative p-6 rounded-2xl border-2 cursor-pointer transition-all bg-white dark:bg-gray-700 ${
                         selectedPlan === plan.id
                           ? 'border-duck-500 shadow-lg'
-                          : 'border-gray-200 hover:border-gray-300'
+                          : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
                       }`}
                       onClick={() => setSelectedPlan(plan.id as any)}
                       whileHover={{ scale: 1.02 }}
@@ -299,7 +299,7 @@ const BusinessSignup: React.FC = () => {
                         name="businessType"
                         value={formData.businessType}
                         onChange={handleInputChange}
-                        className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white transition-colors appearance-none"
+                        className="w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
                         required
                         style={{
                           backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
@@ -449,7 +449,7 @@ const BusinessSignup: React.FC = () => {
                           name="state"
                           value={formData.state}
                           onChange={handleInputChange}
-                          className="w-full pl-10 pr-10 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white transition-colors appearance-none"
+                          className="w-full pl-10 pr-10 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
                           required
                           style={{
                             backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
@@ -520,7 +520,7 @@ const BusinessSignup: React.FC = () => {
                       />
                       <button
                         type="button"
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400"
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}

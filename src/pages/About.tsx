@@ -111,7 +111,7 @@ const About: React.FC = () => {
             </p>
           </motion.div>
 
-          <AnimatedCard className="p-8 lg:p-12 text-center bg-gradient-to-br from-duck-50 to-blue-50 border-2 border-duck-200">
+          <AnimatedCard className="p-8 lg:p-12 text-center bg-gradient-to-br from-duck-50 to-blue-50 dark:from-duck-900/20 dark:to-blue-900/20 border-2 border-duck-200 dark:border-duck-700">
             <div className="text-6xl mb-6">🤝</div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
               Creating Meaningful Connections
@@ -147,7 +147,7 @@ const About: React.FC = () => {
               <AnimatedCard key={index} delay={index * 0.2} direction="up">
                 <div className="p-6 text-center h-full">
                   <div className="relative mb-6">
-                    <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto shadow-lg border-2 border-gray-100">
+                    <div className="w-16 h-16 bg-white dark:bg-gray-700 rounded-2xl flex items-center justify-center mx-auto shadow-lg border-2 border-gray-100 dark:border-gray-600">
                       {feature.icon}
                     </div>
                     <div className="absolute -top-2 -right-2 text-2xl">{feature.emoji}</div>
