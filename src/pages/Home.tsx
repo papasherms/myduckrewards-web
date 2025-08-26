@@ -300,8 +300,13 @@ const Home: React.FC = () => {
                   Start Playing Now
                 </AnimatedButton>
               </Link>
-              <Link to="/contact">
-                <AnimatedButton variant="outline" size="xl" icon={<MapPin size={24} />}>
+              <Link to="/locations">
+                <AnimatedButton 
+                  variant="primary" 
+                  size="xl" 
+                  icon={<MapPin size={24} />}
+                  className="bg-white text-duck-600 hover:bg-gray-100 dark:bg-gray-800 dark:text-duck-400 dark:hover:bg-gray-700 shadow-lg"
+                >
                   Find Locations
                 </AnimatedButton>
               </Link>

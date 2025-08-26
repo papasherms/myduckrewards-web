@@ -105,39 +105,91 @@ const AdminDashboard: React.FC = () => {
   
   const approveBusinessApplication = async (businessId: string) => {
     setLoading(true)
-    const { error } = await supabase
-      .from('businesses')
-      .update({ 
-        approval_status: 'approved',
-        approved_at: new Date().toISOString(),
-        approved_by: user?.id,
-        is_active: true
+    try {
+      const { error } = await supabase.rpc('approve_business', {
+        business_id: businessId
       })
-      .eq('id', businessId)
-    
-    if (!error) {
-      await fetchData()
+      
+      if (error) {
+        console.error('Error approving business:', error)
+        alert('Failed to approve business: ' + error.message)
+      } else {
+        alert('Business approved successfully!')
+        await fetchData()
+      }
+    } catch (err) {
+      console.error('Error:', err)
+      alert('An error occurred while approving the business')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
   }
   
   const rejectBusinessApplication = async (businessId: string, reason: string) => {
     setLoading(true)
-    const { error } = await supabase
-      .from('businesses')
-      .update({ 
-        approval_status: 'rejected',
-        approved_at: new Date().toISOString(),
-        approved_by: user?.id,
-        rejection_reason: reason,
-        is_active: false
+    try {
+      const { error } = await supabase.rpc('reject_business', {
+        business_id: businessId,
+        reason: reason
       })
-      .eq('id', businessId)
-    
-    if (!error) {
-      await fetchData()
+      
+      if (error) {
+        console.error('Error rejecting business:', error)
+        alert('Failed to reject business: ' + error.message)
+      } else {
+        alert('Business rejected successfully')
+        await fetchData()
+      }
+    } catch (err) {
+      console.error('Error:', err)
+      alert('An error occurred while rejecting the business')
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
+  }
+
+  const suspendUser = async (userId: string) => {
+    setLoading(true)
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ is_active: false })
+        .eq('id', userId)
+      
+      if (error) {
+        console.error('Error suspending user:', error)
+        alert('Failed to suspend user: ' + error.message)
+      } else {
+        alert('User suspended successfully')
+        await fetchUsers()
+      }
+    } catch (err) {
+      console.error('Error:', err)
+      alert('An error occurred while suspending the user')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const deleteUser = async (userId: string) => {
+    setLoading(true)
+    try {
+      // First delete from auth.users (this will cascade to public.users)
+      const { error } = await supabase.auth.admin.deleteUser(userId)
+      
+      if (error) {
+        console.error('Error deleting user:', error)
+        alert('Failed to delete user: ' + error.message)
+      } else {
+        alert('User deleted successfully')
+        await fetchUsers()
+      }
+    } catch (err) {
+      console.error('Error:', err)
+      alert('An error occurred while deleting the user')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const stats = [
@@ -354,6 +406,7 @@ const AdminDashboard: React.FC = () => {
                           <th className="text-left p-4 text-gray-300 font-medium">Type</th>
                           <th className="text-left p-4 text-gray-300 font-medium">Status</th>
                           <th className="text-left p-4 text-gray-300 font-medium">Created</th>
+                          <th className="text-left p-4 text-gray-300 font-medium">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -379,6 +432,32 @@ const AdminDashboard: React.FC = () => {
                             </td>
                             <td className="p-4 text-gray-400 text-sm">
                               {new Date(user.created_at).toLocaleDateString()}
+                            </td>
+                            <td className="p-4">
+                              <div className="flex gap-2">
+                                {user.user_type !== 'admin' && user.id !== userProfile?.id && (
+                                  <>
+                                    <button
+                                      onClick={() => suspendUser(user.id)}
+                                      className="text-yellow-400 hover:text-yellow-300 transition-colors"
+                                      title="Suspend User"
+                                    >
+                                      <Shield size={16} />
+                                    </button>
+                                    <button
+                                      onClick={() => {
+                                        if (confirm(`Are you sure you want to delete ${user.email}?`)) {
+                                          deleteUser(user.id)
+                                        }
+                                      }}
+                                      className="text-red-400 hover:text-red-300 transition-colors"
+                                      title="Delete User"
+                                    >
+                                      <X size={16} />
+                                    </button>
+                                  </>
+                                )}
+                              </div>
                             </td>
                           </tr>
                         ))}

@@ -1,5 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { Heart, Target, Award, MapPin, Users, Zap, CheckCircle } from 'lucide-react'
 import AnimatedCard from '../components/AnimatedCard'
 import AnimatedButton from '../components/AnimatedButton'
@@ -305,9 +306,15 @@ const About: React.FC = () => {
               <AnimatedButton variant="secondary" size="xl">
                 Start Playing
               </AnimatedButton>
-              <AnimatedButton variant="outline" size="xl">
-                Become a Partner
-              </AnimatedButton>
+              <Link to="/business-signup">
+                <AnimatedButton 
+                  variant="secondary"
+                  size="xl"
+                  className="bg-white text-duck-600 hover:bg-duck-50 dark:bg-gray-800 dark:text-duck-400 dark:hover:bg-gray-700 border-0"
+                >
+                  Become a Partner
+                </AnimatedButton>
+              </Link>
             </div>
           </motion.div>
         </div>

@@ -3,6 +3,7 @@ import { AuthProvider } from './contexts/AuthContext'
 import { ThemeProvider } from './contexts/ThemeContext'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
 import About from './pages/About'
 import HowItWorks from './pages/HowItWorks'
@@ -36,10 +37,22 @@ function App() {
               <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/customer-signup" element={<CustomerSignup />} />
               <Route path="/business-signup" element={<BusinessSignup />} />
-              {/* Dashboard Routes */}
-              <Route path="/dashboard" element={<CustomerDashboard />} />
-              <Route path="/business-dashboard" element={<BusinessDashboard />} />
-              <Route path="/admin" element={<AdminDashboard />} />
+              {/* Protected Dashboard Routes */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute requiredUserType="customer">
+                  <CustomerDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/business-dashboard" element={
+                <ProtectedRoute requiredUserType="business">
+                  <BusinessDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin" element={
+                <ProtectedRoute requiredUserType="admin">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
             </Routes>
           </main>
           <Footer />

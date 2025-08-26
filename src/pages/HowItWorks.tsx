@@ -288,7 +288,7 @@ const HowItWorks: React.FC = () => {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/contact">
+              <Link to="/locations">
                 <AnimatedButton variant="secondary" size="xl" icon={<MapPin size={24} />}>
                   Find Locations
                 </AnimatedButton>
