@@ -13,17 +13,19 @@ import {
   Settings,
   DollarSign,
   Activity,
-  Database,
   Bell,
-  Eye,
   Plus,
   Check,
   X,
   AlertCircle,
-  Search
+  Search,
+  Clock,
+  UserPlus
 } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
 import { AddUserModal, AddBusinessModal, AddLocationModal, SuspendUserModal } from '../components/AdminModals'
+import NotificationComponent from '../components/Notification'
+import { useNotification } from '../hooks/useNotification'
 import usePageTitle from '../hooks/usePageTitle'
 
 const AdminDashboard: React.FC = () => {
@@ -44,6 +46,8 @@ const AdminDashboard: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [filterType, setFilterType] = useState('all')
   const [sortBy, setSortBy] = useState('created_at')
+  const [recentActivity, setRecentActivity] = useState<any[]>([])
+  const { notification, showNotification, hideNotification } = useNotification()
 
   useEffect(() => {
     if (!user || userProfile?.user_type !== 'admin') {
@@ -154,39 +158,86 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
+  const trackActivity = (action: string, details: any) => {
+    const activity = {
+      action,
+      details,
+      timestamp: new Date().toISOString(),
+      user: userProfile?.email || 'Admin'
+    }
+    setRecentActivity((prev: any[]) => [activity, ...prev].slice(0, 10))
+  }
+
+  const getActivityMessage = (activity: any) => {
+    switch(activity.action) {
+      case 'user_suspended':
+        return `User suspended: ${activity.details.userId.substring(0, 8)}...`
+      case 'user_reactivated':
+        return `User reactivated: ${activity.details.userId.substring(0, 8)}...`
+      case 'user_deleted':
+        return `User deleted: ${activity.details.userId.substring(0, 8)}...`
+      case 'business_approved':
+        return `Business approved: ${activity.details.businessId.substring(0, 8)}...`
+      case 'business_rejected':
+        return `Business rejected: ${activity.details.businessId.substring(0, 8)}...`
+      default:
+        return activity.action
+    }
+  }
+
   const suspendUser = async (userId: string, reason: string) => {
-    
     setLoading(true)
     try {
-      // First get the current user to check status
-      const { data: userData } = await supabase
-        .from('users')
-        .select('is_active')
-        .eq('id', userId)
-        .single()
-      
-      const newStatus = !userData?.is_active
-      
       const { error } = await supabase
         .from('users')
         .update({ 
-          is_active: newStatus,
-          suspension_reason: !newStatus ? reason : null,
-          suspended_at: !newStatus ? new Date().toISOString() : null,
+          is_active: false,
+          suspension_reason: reason,
+          suspended_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
         .eq('id', userId)
       
       if (error) {
-        console.error('Error toggling user status:', error)
-        alert('Failed to update user status: ' + error.message)
+        console.error('Error suspending user:', error)
+        showNotification('error', 'Failed to suspend user', error.message)
       } else {
-        alert(newStatus ? 'User activated successfully' : `User suspended successfully. Reason: ${reason}`)
+        showNotification('success', 'User Suspended', `User has been suspended. Reason: ${reason}`)
         await fetchAllUsers()
+        trackActivity('user_suspended', { userId, reason })
       }
     } catch (err) {
       console.error('Error:', err)
-      alert('An error occurred while updating the user status')
+      showNotification('error', 'Error', 'An error occurred while suspending the user')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const reactivateUser = async (userId: string) => {
+    setLoading(true)
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ 
+          is_active: true,
+          suspension_reason: null,
+          suspended_at: null,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', userId)
+      
+      if (error) {
+        console.error('Error reactivating user:', error)
+        showNotification('error', 'Failed to reactivate user', error.message)
+      } else {
+        showNotification('success', 'User Reactivated', 'User has been successfully reactivated')
+        await fetchAllUsers()
+        trackActivity('user_reactivated', { userId })
+      }
+    } catch (err) {
+      console.error('Error:', err)
+      showNotification('error', 'Error', 'An error occurred while reactivating the user')
     } finally {
       setLoading(false)
     }
@@ -243,12 +294,6 @@ const AdminDashboard: React.FC = () => {
     { id: 'ducks', label: 'Duck Management', icon: Package },
     { id: 'analytics', label: 'Analytics', icon: TrendingUp },
     { id: 'system', label: 'System', icon: Settings }
-  ]
-
-  const recentActivity = [
-    { type: 'user', message: 'New customer registration', time: 'Just now', icon: Users },
-    { type: 'business', message: 'Business signup pending approval', time: '5 min ago', icon: Building },
-    { type: 'system', message: 'System backup completed', time: '1 hour ago', icon: Database }
   ]
 
   return (
@@ -340,19 +385,31 @@ const AdminDashboard: React.FC = () => {
                   <div>
                     <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
                     <div className="grid grid-cols-2 gap-3">
-                      <button className="p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-colors text-left">
+                      <button 
+                        onClick={() => setShowAddLocationModal(true)}
+                        className="p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-colors text-left"
+                      >
                         <Plus className="text-duck-400 mb-2" size={24} />
                         <h4 className="font-medium text-white text-sm">Add Location</h4>
                       </button>
-                      <button className="p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-colors text-left">
-                        <Users className="text-duck-400 mb-2" size={24} />
-                        <h4 className="font-medium text-white text-sm">Manage Users</h4>
+                      <button 
+                        onClick={() => setShowAddUserModal(true)}
+                        className="p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-colors text-left"
+                      >
+                        <UserPlus className="text-duck-400 mb-2" size={24} />
+                        <h4 className="font-medium text-white text-sm">Add User</h4>
                       </button>
-                      <button className="p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-colors text-left">
-                        <Package className="text-duck-400 mb-2" size={24} />
-                        <h4 className="font-medium text-white text-sm">Duck Inventory</h4>
+                      <button 
+                        onClick={() => setShowAddBusinessModal(true)}
+                        className="p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-colors text-left"
+                      >
+                        <Building className="text-duck-400 mb-2" size={24} />
+                        <h4 className="font-medium text-white text-sm">Add Business</h4>
                       </button>
-                      <button className="p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-colors text-left">
+                      <button 
+                        onClick={() => showNotification('info', 'Coming Soon', 'Duck Alert feature will be available soon')}
+                        className="p-4 bg-gray-700/50 rounded-xl hover:bg-gray-700 transition-colors text-left"
+                      >
                         <Bell className="text-duck-400 mb-2" size={24} />
                         <h4 className="font-medium text-white text-sm">Send Alert</h4>
                       </button>
@@ -363,16 +420,19 @@ const AdminDashboard: React.FC = () => {
                   <div>
                     <h2 className="text-xl font-bold text-white mb-4">Recent Activity</h2>
                     <div className="space-y-3">
-                      {recentActivity.map((activity, index) => (
+                      {recentActivity.length > 0 ? recentActivity.map((activity, index) => (
                         <div key={index} className="flex items-center space-x-3 p-3 bg-gray-700/30 rounded-lg">
-                          <activity.icon className="text-gray-400" size={20} />
+                          <Clock className="text-gray-400" size={20} />
                           <div className="flex-1">
-                            <p className="text-white text-sm">{activity.message}</p>
-                            <p className="text-gray-500 text-xs">{activity.time}</p>
+                            <p className="text-white text-sm">{getActivityMessage(activity)}</p>
+                            <p className="text-gray-500 text-xs">{new Date(activity.timestamp).toLocaleTimeString()}</p>
                           </div>
-                          <Eye className="text-gray-500 cursor-pointer hover:text-white" size={16} />
                         </div>
-                      ))}
+                      )) : (
+                        <div className="p-4 bg-gray-700/30 rounded-lg text-center">
+                          <p className="text-gray-400 text-sm">No recent activity</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -383,11 +443,11 @@ const AdminDashboard: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="bg-gray-700/30 rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-gray-400 text-sm">Database Usage</span>
-                        <span className="text-white font-medium">12%</span>
+                        <span className="text-gray-400 text-sm">Total Users</span>
+                        <span className="text-white font-medium">{allUsers.length}</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div className="bg-green-500 h-2 rounded-full" style={{ width: '12%' }}></div>
+                        <div className="bg-green-500 h-2 rounded-full" style={{ width: `${Math.min((allUsers.length / 1000) * 100, 100)}%` }}></div>
                       </div>
                     </div>
                     <div className="bg-gray-700/30 rounded-lg p-4">
@@ -401,11 +461,11 @@ const AdminDashboard: React.FC = () => {
                     </div>
                     <div className="bg-gray-700/30 rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-gray-400 text-sm">Machine Uptime</span>
-                        <span className="text-white font-medium">99.9%</span>
+                        <span className="text-gray-400 text-sm">Total Locations</span>
+                        <span className="text-white font-medium">{allLocations.length}</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div className="bg-duck-500 h-2 rounded-full" style={{ width: '99.9%' }}></div>
+                        <div className="bg-duck-500 h-2 rounded-full" style={{ width: `${Math.min((allLocations.length / 50) * 100, 100)}%` }}></div>
                       </div>
                     </div>
                   </div>
@@ -536,16 +596,26 @@ const AdminDashboard: React.FC = () => {
                               <div className="flex gap-2">
                                 {user.user_type !== 'admin' && user.id !== userProfile?.id && (
                                   <>
-                                    <button
-                                      onClick={() => {
-                                        setUserToSuspend(user)
-                                        setShowSuspendModal(true)
-                                      }}
-                                      className="text-yellow-400 hover:text-yellow-300 transition-colors"
-                                      title="Suspend User"
-                                    >
-                                      <Shield size={16} />
-                                    </button>
+                                    {user.is_active === false ? (
+                                      <button
+                                        onClick={() => reactivateUser(user.id)}
+                                        className="text-green-400 hover:text-green-300 transition-colors"
+                                        title="Reactivate User"
+                                      >
+                                        <Check size={16} />
+                                      </button>
+                                    ) : (
+                                      <button
+                                        onClick={() => {
+                                          setUserToSuspend(user)
+                                          setShowSuspendModal(true)
+                                        }}
+                                        className="text-yellow-400 hover:text-yellow-300 transition-colors"
+                                        title="Suspend User"
+                                      >
+                                        <Shield size={16} />
+                                      </button>
+                                    )}
                                     <button
                                       onClick={() => {
                                         if (confirm(`Are you sure you want to delete ${user.email}?`)) {
@@ -930,6 +1000,14 @@ const AdminDashboard: React.FC = () => {
           }
         }}
         userEmail={userToSuspend?.email}
+      />
+
+      <NotificationComponent
+        type={notification.type}
+        title={notification.title}
+        message={notification.message}
+        isOpen={notification.isOpen}
+        onClose={hideNotification}
       />
     </div>
   )

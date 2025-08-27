@@ -1,278 +1,338 @@
 # 🦆 MyDuckRewards
 
-A loyalty rewards platform that transforms collecting rubber ducks from claw machines into valuable local business discounts and instant prizes.
+A gamified loyalty rewards platform that transforms collecting rubber ducks from claw machines into valuable local business discounts and instant prizes.
 
 ## 🚀 Live Site
 
 **Production URL:** [https://myduckrewards.com](https://myduckrewards.com)  
-**Deployment:** AWS Amplify with GitHub CI/CD
+**Deployment:** AWS Amplify with GitHub CI/CD  
+**Status:** ✅ Production Ready
 
-## 📊 Project Status (December 2024)
+## 📋 Table of Contents
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Getting Started](#-getting-started)
+- [Environment Setup](#-environment-setup)
+- [Database Setup](#-database-setup)
+- [Development](#-development)
+- [Deployment](#-deployment)
+- [Project Structure](#-project-structure)
+- [API Documentation](#-api-documentation)
+- [Contributing](#-contributing)
 
-### ✅ Fully Implemented Features
+## ✨ Features
 
-- **Complete Authentication System**
-  - Customer registration and login
-  - Business partnership applications with approval workflow
-  - Admin user management
-  - Email verification
-  - Password reset functionality
-  - Session management with Supabase Auth
+### Authentication & User Management
+- **Multi-tier Authentication**
+  - Customer registration with email verification
+  - Business partnership applications with admin approval workflow
+  - Admin user management with role-based access
+- **Password Management**
+  - Secure password reset via email
+  - Session persistence with Supabase Auth
+  - Automatic logout on token expiry
 
-- **Three Dashboard Types**
-  - **Customer Dashboard**: Collection tracking, redemptions, profile management
-  - **Business Dashboard**: Analytics, Duck Alerts, location management
-  - **Admin Dashboard**: User/business/location management, approval system
+### Dashboard System
+- **Customer Dashboard** (`/dashboard/customer`)
+  - Duck collection tracking with visual display
+  - Redemption history and coupon management
+  - Profile completion tracking (percentage-based)
+  - Location-based rewards discovery
+  
+- **Business Dashboard** (`/dashboard/business`)
+  - Real-time analytics and metrics
+  - Duck Alert creation for targeted marketing
+  - Location management for multiple outlets
+  - Campaign performance tracking
+  
+- **Admin Dashboard** (`/dashboard/admin`)
+  - User management with suspension/deletion capabilities
+  - Business approval/rejection workflow
+  - Location and inventory management
+  - System metrics and recent activity tracking
+  - Custom notification system (replaced browser alerts)
 
-- **Business Approval Workflow**
-  - Businesses submit applications (pending status)
-  - Admin reviews and approves/rejects
-  - Approved businesses gain dashboard access
-  - Email notifications on status change
-
-- **Dark/Light Mode**
-  - System-wide theme toggle
-  - Persistent preference (localStorage)
-  - Optimized contrast for all components
-
-- **Profile Management**
-  - First-time login redirect to profile completion
-  - Profile completion percentage tracking
-  - Editable user information
-  - Address and contact details
-
-- **Location System**
-  - Interactive location search by ZIP
-  - Geolocation support
-  - Location cards with directions
-  - Machine capacity tracking
-
+### UI/UX Features
+- **Dark/Light Mode Toggle**
+  - System-wide theme switching
+  - Persistent preference storage
+  - Mobile-optimized toggle in header
+  
+- **Interactive Location Map**
+  - Google Maps integration with custom duck markers
+  - Location search by ZIP code
+  - Current location detection
+  - Directions integration
+  
 - **Responsive Design**
-  - Mobile-optimized UI
-  - Tablet and desktop layouts
-  - Animated components with Framer Motion
-  - Custom duck-themed styling
+  - Mobile-first approach
+  - Touch-optimized interfaces
+  - Progressive web app capabilities
+
+### Business Features
+- **Approval Workflow**
+  ```
+  Application → Pending → Admin Review → Approved/Rejected
+  ```
+- **Membership Tiers**: Basic, Trade, Premium
+- **Location-based Marketing**: 5-mile radius targeting
+- **Duck Alert System**: Push notifications for nearby offers
 
 ## 🛠 Tech Stack
 
-- **Frontend**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS with custom theme
-- **Database**: Supabase (PostgreSQL)
-- **Authentication**: Supabase Auth
-- **Deployment**: AWS Amplify
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
+### Frontend
+- **React 19** with TypeScript
+- **Vite** for blazing fast builds
+- **Tailwind CSS** for styling
+- **Framer Motion** for animations
+- **React Router** for navigation
+- **Google Maps API** for location services
 
-## 🗄 Database Setup
+### Backend & Infrastructure
+- **Supabase**
+  - PostgreSQL database
+  - Row Level Security (RLS)
+  - Real-time subscriptions
+  - Authentication service
+- **AWS Amplify**
+  - Hosting & CI/CD
+  - Environment management
+  - Custom domain SSL
 
-### Fresh Supabase Project Setup
+### Development Tools
+- **ESLint** for code quality
+- **TypeScript** for type safety
+- **Git** for version control
+- **npm** for package management
 
-1. Create a new Supabase project at [supabase.com](https://supabase.com)
-
-2. Go to SQL Editor and run the complete setup script:
-   ```sql
-   -- Run the contents of complete-database-setup.sql
-   ```
-
-3. This creates:
-   - 7 tables (users, businesses, locations, ducks, etc.)
-   - Row Level Security policies
-   - Helper functions and triggers
-   - Sample location data
-
-### Create Your First Admin User
-
-1. Sign up through the app as a regular user
-2. Go to Supabase Dashboard → Table Editor → `users` table
-3. Find your user and change `user_type` from 'customer' to 'admin'
-4. You now have full admin access
-
-## 🚀 Local Development
+## 🚀 Getting Started
 
 ### Prerequisites
-
-- Node.js 18+ and npm
+- Node.js >= 20.0.0
+- npm >= 10.0.0
+- Git
 - Supabase account
+- Google Cloud account (for Maps API)
 
 ### Installation
 
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/myduckrewards-web.git
-cd myduckrewards-web
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/papasherms/myduckrewards-web.git
+   cd myduckrewards-web
+   ```
 
-# Install dependencies
-npm install
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-# Create .env file with your Supabase credentials
-echo "VITE_SUPABASE_URL=your_supabase_url" > .env
-echo "VITE_SUPABASE_ANON_KEY=your_anon_key" >> .env
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   ```
 
-# Start development server
-npm run dev
+4. **Configure your `.env` file**
+   ```env
+   VITE_SUPABASE_URL=your_supabase_project_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+   ```
+
+5. **Run the development server**
+   ```bash
+   npm run dev
+   ```
+
+## 🔑 Environment Setup
+
+### Supabase Configuration
+1. Create a new Supabase project
+2. Run the database setup script: `complete-database-setup.sql`
+3. Configure authentication providers
+4. Set up email templates
+
+### Google Maps API Setup
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select existing
+3. Enable these APIs:
+   - Maps JavaScript API
+   - Places API
+4. Create API key and restrict it:
+   - HTTP referrers: `localhost:*`, `myduckrewards.com/*`
+   - API restrictions: Maps JavaScript API, Places API
+
+## 🗄️ Database Setup
+
+### Schema Overview
+```sql
+-- Main Tables
+users           -- User profiles with extended info
+businesses      -- Business partnerships
+locations       -- Claw machine locations
+ducks          -- Duck inventory
+user_ducks     -- User collections
+redemptions    -- Reward redemptions
+duck_alerts    -- Marketing campaigns
 ```
+
+### Key RLS Policies
+- Users can only view/edit their own profiles
+- Businesses require admin approval to access system
+- Admins have full access to all tables
+- Public can view active locations
+
+### Setup Instructions
+1. Run `complete-database-setup.sql` in Supabase SQL editor
+2. Configure RLS policies as needed
+3. Set up database triggers for automated workflows
+
+## 💻 Development
 
 ### Available Scripts
-
 ```bash
-npm run dev       # Start development server
-npm run build     # Build for production
-npm run preview   # Preview production build
-npm run lint      # Run ESLint
-npm run type-check # Run TypeScript checks
+npm run dev      # Start development server
+npm run build    # Production build
+npm run preview  # Preview production build
+npm run lint     # Run ESLint
 ```
+
+### Code Style Guidelines
+- **Components**: Use functional components with TypeScript
+- **Styling**: Tailwind classes with consistent patterns
+- **Forms**: Use controlled components with validation
+- **API Calls**: Centralize in service files
+- **Error Handling**: Use try-catch with user notifications
+
+### UI/UX Standards
+All form inputs should use consistent styling:
+```css
+className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 
+           rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 
+           bg-white dark:bg-gray-700 text-gray-900 dark:text-white 
+           transition-colors appearance-none"
+```
+
+Button variants:
+- **Primary**: Orange gradient for main CTAs
+- **Secondary**: Blue for navigation/secondary actions
+- **Outline**: Border-only for tertiary actions
+
+## 🚢 Deployment
+
+### AWS Amplify Deployment
+1. Connect GitHub repository to AWS Amplify
+2. Configure environment variables in Amplify console
+3. Set build settings:
+   ```yaml
+   version: 1
+   frontend:
+     phases:
+       preBuild:
+         commands:
+           - npm ci
+       build:
+         commands:
+           - npm run build
+     artifacts:
+       baseDirectory: dist
+       files:
+         - '**/*'
+   ```
+
+### Production Checklist
+- [ ] Environment variables configured
+- [ ] Database migrations complete
+- [ ] SSL certificate active
+- [ ] Error tracking enabled
+- [ ] Analytics configured
+- [ ] Email service connected
 
 ## 📁 Project Structure
 
 ```
 src/
-├── components/        # Reusable UI components
-│   ├── AdminModals.tsx   # Admin CRUD modals
+├── components/         # Reusable UI components
 │   ├── AnimatedButton.tsx
-│   ├── AnimatedCard.tsx
 │   ├── Header.tsx
-│   └── Footer.tsx
-├── contexts/         # React contexts
-│   ├── AuthContext.tsx   # Authentication state
-│   └── ThemeContext.tsx  # Dark/light mode
-├── pages/           # Route components
-│   ├── SignIn.tsx
-│   ├── CustomerSignup.tsx
-│   ├── BusinessSignup.tsx
-│   ├── ForgotPassword.tsx
-│   ├── CustomerDashboard.tsx
-│   ├── BusinessDashboard.tsx
-│   ├── AdminDashboard.tsx
-│   ├── Locations.tsx
-│   └── [other pages]
-├── lib/             # External service configs
-│   └── supabase.ts
-├── types/           # TypeScript definitions
-│   └── auth.ts
-├── hooks/           # Custom React hooks
-│   └── usePageTitle.ts
-└── App.tsx          # Main app component
+│   ├── Notification.tsx
+│   └── AdminModals.tsx
+├── contexts/          # React contexts
+│   ├── AuthContext.tsx
+│   └── ThemeContext.tsx
+├── hooks/            # Custom React hooks
+├── lib/              # External service configs
+├── pages/            # Route components
+├── styles/           # Global styles
+└── types/            # TypeScript definitions
 ```
 
-## 🔐 Authentication Flow
+## 📝 API Documentation
 
-1. **Customer Registration**
-   - Fill out form → Create auth account → Auto-create user profile
-   - Email verification sent
-   - First login redirects to profile completion
+### Authentication Endpoints
+- `POST /auth/signup` - User registration
+- `POST /auth/signin` - User login
+- `POST /auth/signout` - User logout
+- `POST /auth/reset-password` - Password reset
 
-2. **Business Registration**
-   - Submit partnership application → Status: "pending"
-   - Admin reviews application
-   - If approved → Business can access dashboard
-   - If rejected → Reason provided, can reapply
-
-3. **Admin Access**
-   - Regular user signup → Manual promotion to admin
-   - Full system management capabilities
-   - Approve/reject businesses
-   - Manage users and locations
-
-## 🎨 Features Overview
-
-### For Customers
-- Track duck collection
-- View and redeem rewards
-- Find nearby locations
-- Manage profile
-- Receive Duck Alerts
-
-### For Businesses
-- Submit partnership applications
-- Send Duck Alerts to customers
-- View analytics dashboard
-- Manage reward campaigns
-- Track redemptions
-
-### For Admins
-- Approve/reject business applications
-- Manage all users
-- Add/edit locations
-- System-wide analytics
-- Database management
-
-## 🚢 Deployment
-
-The app is deployed on AWS Amplify with automatic CI/CD from GitHub.
-
-### Deploy Your Own
-
-1. Fork this repository
-2. Set up AWS Amplify
-3. Connect your GitHub repository
-4. Add environment variables:
-   ```
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_ANON_KEY=your_anon_key
-   ```
-5. Deploy!
-
-## 📝 Environment Variables
-
-Create a `.env` file in the root directory:
-
-```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-
-## 🧪 Testing
-
-### Test Accounts
-
-After setting up your database, create test accounts:
-
-1. **Customer**: Regular signup flow
-2. **Business**: Partnership application → Admin approval
-3. **Admin**: Regular signup → Manual role change in database
-
-### Key User Flows to Test
-
-1. Complete customer registration and profile
-2. Submit business application and approval process
-3. Admin dashboard functionality
-4. Dark/light mode toggle
-5. Location search
-6. Password reset
+### RPC Functions
+- `approve_business(business_id, approved_by)` - Approve business application
+- `reject_business(business_id, reason)` - Reject business application
+- `delete_user_admin(user_id)` - Admin user deletion
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+### Commit Message Format
+```
+type: subject
+
+body (optional)
+
+🤖 Generated with Claude Code (if applicable)
+Co-Authored-By: Claude <noreply@anthropic.com>
+```
+
+## 🐛 Known Issues & Solutions
+
+### Issue: Business Signup RLS Error
+**Solution**: Implemented approval workflow - businesses start as pending
+
+### Issue: Dark Mode Visibility
+**Solution**: Added gradient backgrounds and proper contrast classes
+
+### Issue: Suspension Feature
+**Solution**: Custom modal with reason tracking, stores in database
+
+## 📈 Future Enhancements
+
+- [ ] Payment processing (Stripe integration)
+- [ ] Duck QR code scanning
+- [ ] Push notifications
+- [ ] Analytics dashboard
+- [ ] Email campaign integration
+- [ ] Mobile app (React Native)
+
 ## 📄 License
 
-This project is proprietary and confidential.
+This project is proprietary and confidential. All rights reserved.
 
-## 🆘 Support
+## 👥 Team
 
-For issues or questions, please contact the development team.
+- **Development**: Justin Sherman
+- **AI Assistant**: Claude (Anthropic)
 
-## 🎯 Roadmap
+## 📧 Contact
 
-### Coming Soon
-- [ ] Payment processing (Stripe integration)
-- [ ] Real-time Duck Alert notifications
-- [ ] Mobile app (React Native)
-- [ ] Advanced analytics dashboard
-- [ ] QR code scanning for duck collection
-- [ ] Social features (leaderboards, sharing)
-
-### Future Enhancements
-- [ ] Multi-language support
-- [ ] Franchise management system
-- [ ] API for third-party integrations
-- [ ] Automated email campaigns
-- [ ] Reward marketplace
+For questions or support, please contact:
+- Email: support@myduckrewards.com
+- Website: https://myduckrewards.com
 
 ---
 
-**MyDuckRewards** - Transforming local marketing through collectible rewards 🦆
+Built with ❤️ and 🦆 in Michigan
