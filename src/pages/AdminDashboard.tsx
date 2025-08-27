@@ -171,6 +171,8 @@ const AdminDashboard: React.FC = () => {
         .from('users')
         .update({ 
           is_active: newStatus,
+          suspension_reason: !newStatus ? reason : null,
+          suspended_at: !newStatus ? new Date().toISOString() : null,
           updated_at: new Date().toISOString()
         })
         .eq('id', userId)
@@ -179,7 +181,7 @@ const AdminDashboard: React.FC = () => {
         console.error('Error toggling user status:', error)
         alert('Failed to update user status: ' + error.message)
       } else {
-        alert(newStatus ? 'User activated successfully' : 'User suspended successfully')
+        alert(newStatus ? 'User activated successfully' : `User suspended successfully. Reason: ${reason}`)
         await fetchAllUsers()
       }
     } catch (err) {
