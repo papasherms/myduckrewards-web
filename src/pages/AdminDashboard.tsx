@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
+import { adminFunctions } from '../lib/supabase-admin'
 import { 
   Shield,
   Ban,
@@ -132,20 +133,30 @@ const AdminDashboard: React.FC = () => {
   const approveBusinessApplication = async (businessId: string) => {
     setLoading(true)
     try {
-      const { error } = await supabase.rpc('approve_business', {
-        business_id: businessId
-      })
-      
-      if (error) {
-        console.error('Error approving business:', error)
-        alert('Failed to approve business: ' + error.message)
-      } else {
-        alert('Business approved successfully!')
+      // Use admin function if available (bypasses RLS)
+      if (adminFunctions) {
+        await adminFunctions.approveBusiness(businessId, currentUser?.id || '')
+        showNotification('success', 'Business Approved', 'Business application has been approved')
         await fetchData()
+        trackActivity('business_approved', { businessId })
+      } else {
+        // Fallback to RPC function
+        const { error } = await supabase.rpc('approve_business', {
+          business_id: businessId
+        })
+        
+        if (error) {
+          console.error('Error approving business:', error)
+          showNotification('error', 'Failed to approve business', error.message)
+        } else {
+          showNotification('success', 'Business Approved', 'Business application has been approved')
+          await fetchData()
+          trackActivity('business_approved', { businessId })
+        }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error:', err)
-      alert('An error occurred while approving the business')
+      showNotification('error', 'Error', err.message || 'An error occurred while approving the business')
     } finally {
       setLoading(false)
     }
@@ -154,21 +165,31 @@ const AdminDashboard: React.FC = () => {
   const rejectBusinessApplication = async (businessId: string, reason: string) => {
     setLoading(true)
     try {
-      const { error } = await supabase.rpc('reject_business', {
-        business_id: businessId,
-        reason: reason
-      })
-      
-      if (error) {
-        console.error('Error rejecting business:', error)
-        alert('Failed to reject business: ' + error.message)
-      } else {
-        alert('Business rejected successfully')
+      // Use admin function if available (bypasses RLS)
+      if (adminFunctions) {
+        await adminFunctions.rejectBusiness(businessId, reason)
+        showNotification('success', 'Business Rejected', 'Business application has been rejected')
         await fetchData()
+        trackActivity('business_rejected', { businessId, reason })
+      } else {
+        // Fallback to RPC function
+        const { error } = await supabase.rpc('reject_business', {
+          business_id: businessId,
+          reason: reason
+        })
+        
+        if (error) {
+          console.error('Error rejecting business:', error)
+          showNotification('error', 'Failed to reject business', error.message)
+        } else {
+          showNotification('success', 'Business Rejected', 'Business application has been rejected')
+          await fetchData()
+          trackActivity('business_rejected', { businessId, reason })
+        }
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error:', err)
-      alert('An error occurred while rejecting the business')
+      showNotification('error', 'Error', err.message || 'An error occurred while rejecting the business')
     } finally {
       setLoading(false)
     }
@@ -220,32 +241,47 @@ const AdminDashboard: React.FC = () => {
       
       console.log('User found:', userData)
       
-      // Update user with suspension data
-      const { data, error } = await supabase
-        .from('users')
-        .update({ 
-          is_active: false,
-          suspension_reason: reason,
-          suspended_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', userId)
-        .select()
-        .single()
-      
-      if (error) {
-        console.error('Error suspending user:', error)
-        // Check if it's a column error
-        if (error.message.includes('column')) {
-          showNotification('error', 'Database Schema Error', 'Suspension columns may be missing. Please run the migration script.')
-        } else {
-          showNotification('error', 'Failed to suspend user', error.message)
+      // Use admin function if available (bypasses RLS)
+      if (adminFunctions) {
+        try {
+          await adminFunctions.suspendUser(userId, reason, currentUser?.id || '')
+          console.log('User suspended successfully using admin client')
+          showNotification('success', 'User Suspended', `User has been suspended successfully`)
+          await fetchAllUsers()
+          trackActivity('user_suspended', { userId, reason })
+        } catch (adminError) {
+          console.error('Admin function error:', adminError)
+          // Fall back to regular update
+          throw adminError
         }
       } else {
-        console.log('User suspended successfully:', data)
-        showNotification('success', 'User Suspended', `User has been suspended successfully`)
-        await fetchAllUsers()
-        trackActivity('user_suspended', { userId, reason })
+        // Fallback to regular client
+        const { data, error } = await supabase
+          .from('users')
+          .update({ 
+            is_active: false,
+            suspension_reason: reason,
+            suspended_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', userId)
+          .select()
+          .single()
+        
+        if (error) {
+          console.error('Error suspending user:', error)
+          // Check if it's a column error
+          if (error.message.includes('column')) {
+            showNotification('error', 'Database Schema Error', 'Suspension columns may be missing. Please run the migration script.')
+          } else {
+            showNotification('error', 'Failed to suspend user', error.message)
+          }
+        } else {
+          console.log('User suspended successfully:', data)
+          showNotification('success', 'User Suspended', `User has been suspended successfully`)
+          await fetchAllUsers()
+          trackActivity('user_suspended', { userId, reason })
+        }
       }
     } catch (err) {
       console.error('Unexpected error:', err)

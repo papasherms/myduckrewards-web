@@ -50,7 +50,8 @@ A gamified loyalty rewards platform that transforms collecting rubber ducks from
   - Business approval/rejection workflow
   - Location and inventory management
   - System metrics and recent activity tracking
-  - Custom notification system (replaced browser alerts)
+  - Custom notification system with toast notifications
+  - Admin-level operations with service role key support
 
 ### UI/UX Features
 - **Dark/Light Mode Toggle**
@@ -94,6 +95,7 @@ A gamified loyalty rewards platform that transforms collecting rubber ducks from
   - Row Level Security (RLS)
   - Real-time subscriptions
   - Authentication service
+  - Service role key for admin operations
 - **AWS Amplify**
   - Hosting & CI/CD
   - Environment management
@@ -118,7 +120,7 @@ A gamified loyalty rewards platform that transforms collecting rubber ducks from
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/papasherms/myduckrewards-web.git
+   git clone https://github.com/yourusername/myduckrewards-web.git
    cd myduckrewards-web
    ```
 
@@ -136,6 +138,7 @@ A gamified loyalty rewards platform that transforms collecting rubber ducks from
    ```env
    VITE_SUPABASE_URL=your_supabase_project_url
    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   VITE_SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
    VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
    ```
 
@@ -148,9 +151,10 @@ A gamified loyalty rewards platform that transforms collecting rubber ducks from
 
 ### Supabase Configuration
 1. Create a new Supabase project
-2. Run the database setup script: `complete-database-setup.sql`
+2. Run the database setup script: `sql-scripts/complete-database-setup.sql`
 3. Configure authentication providers
-4. Set up email templates
+4. Set up email templates from `email-templates/` directory
+5. Get your service role key from Settings → API
 
 ### Google Maps API Setup
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
@@ -179,22 +183,24 @@ duck_alerts    -- Marketing campaigns
 ### Key RLS Policies
 - Users can only view/edit their own profiles
 - Businesses require admin approval to access system
-- Admins have full access to all tables
+- Admins have full access to all tables (via service role)
 - Public can view active locations
 
 ### Setup Instructions
-1. Run `complete-database-setup.sql` in Supabase SQL editor
-2. Configure RLS policies as needed
-3. Set up database triggers for automated workflows
+1. Run `sql-scripts/complete-database-setup.sql` in Supabase SQL editor
+2. Run `sql-scripts/add-suspension-columns.sql` for user suspension features
+3. Configure RLS policies as needed
+4. Set up database triggers for automated workflows
 
 ## 💻 Development
 
 ### Available Scripts
 ```bash
-npm run dev      # Start development server
+npm run dev      # Start development server (port 5173)
 npm run build    # Production build
 npm run preview  # Preview production build
 npm run lint     # Run ESLint
+npm run type-check # TypeScript type checking
 ```
 
 ### Code Style Guidelines
@@ -203,6 +209,7 @@ npm run lint     # Run ESLint
 - **Forms**: Use controlled components with validation
 - **API Calls**: Centralize in service files
 - **Error Handling**: Use try-catch with user notifications
+- **Admin Operations**: Use supabase-admin client for RLS bypass
 
 ### UI/UX Standards
 All form inputs should use consistent styling:
@@ -243,6 +250,7 @@ Button variants:
 ### Production Checklist
 - [ ] Environment variables configured
 - [ ] Database migrations complete
+- [ ] Service role key added for admin operations
 - [ ] SSL certificate active
 - [ ] Error tracking enabled
 - [ ] Analytics configured
@@ -251,20 +259,57 @@ Button variants:
 ## 📁 Project Structure
 
 ```
-src/
-├── components/         # Reusable UI components
-│   ├── AnimatedButton.tsx
-│   ├── Header.tsx
-│   ├── Notification.tsx
-│   └── AdminModals.tsx
-├── contexts/          # React contexts
-│   ├── AuthContext.tsx
-│   └── ThemeContext.tsx
-├── hooks/            # Custom React hooks
-├── lib/              # External service configs
-├── pages/            # Route components
-├── styles/           # Global styles
-└── types/            # TypeScript definitions
+myduckrewards-web/
+├── src/
+│   ├── components/         # Reusable UI components
+│   │   ├── AnimatedButton.tsx
+│   │   ├── AnimatedCard.tsx
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   ├── GoogleLocationMap.tsx
+│   │   ├── Notification.tsx
+│   │   ├── ProtectedRoute.tsx
+│   │   ├── ScrollToTop.tsx
+│   │   └── AdminModals.tsx
+│   ├── contexts/          # React contexts
+│   │   ├── AuthContext.tsx
+│   │   └── ThemeContext.tsx
+│   ├── hooks/            # Custom React hooks
+│   │   ├── useNotification.tsx
+│   │   └── usePageTitle.ts
+│   ├── lib/              # External service configs
+│   │   ├── supabase.ts
+│   │   ├── supabase-admin.ts
+│   │   └── supabase-business-fix.ts
+│   ├── pages/            # Route components
+│   │   ├── Home.tsx
+│   │   ├── About.tsx
+│   │   ├── Business.tsx
+│   │   ├── Contact.tsx
+│   │   ├── HowItWorks.tsx
+│   │   ├── Locations.tsx
+│   │   ├── SignIn.tsx
+│   │   ├── ForgotPassword.tsx
+│   │   ├── CustomerSignup.tsx
+│   │   ├── BusinessSignup.tsx
+│   │   ├── CustomerDashboard.tsx
+│   │   ├── BusinessDashboard.tsx
+│   │   └── AdminDashboard.tsx
+│   ├── types/            # TypeScript definitions
+│   └── App.tsx           # Main app component
+├── email-templates/      # Supabase email templates
+│   ├── confirm-signup.html
+│   ├── invite-user.html
+│   ├── magic-link.html
+│   ├── change-email.html
+│   ├── reset-password.html
+│   └── reauthentication.html
+├── sql-scripts/         # Database setup and migrations
+│   ├── complete-database-setup.sql
+│   ├── add-suspension-columns.sql
+│   ├── check-suspension-columns.sql
+│   └── archive/        # Old migration scripts
+└── CLAUDE.md           # AI assistant context file
 ```
 
 ## 📝 API Documentation
@@ -276,9 +321,17 @@ src/
 - `POST /auth/reset-password` - Password reset
 
 ### RPC Functions
-- `approve_business(business_id, approved_by)` - Approve business application
+- `approve_business(business_id)` - Approve business application
 - `reject_business(business_id, reason)` - Reject business application
 - `delete_user_admin(user_id)` - Admin user deletion
+
+### Admin Functions (via service role)
+- `getAllUsers()` - Fetch all users (bypasses RLS)
+- `getAllBusinesses()` - Fetch all businesses
+- `suspendUser(userId, reason, adminId)` - Suspend user account
+- `unsuspendUser(userId)` - Reactivate suspended user
+- `updateUserRole(userId, role)` - Change user type
+- `getSystemStats()` - Get platform statistics
 
 ## 🤝 Contributing
 
@@ -294,7 +347,7 @@ type: subject
 
 body (optional)
 
-🤖 Generated with Claude Code (if applicable)
+🤖 Generated with Claude Code
 Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
@@ -306,17 +359,24 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ### Issue: Dark Mode Visibility
 **Solution**: Added gradient backgrounds and proper contrast classes
 
-### Issue: Suspension Feature
-**Solution**: Custom modal with reason tracking, stores in database
+### Issue: User Suspension
+**Solution**: Admin client with service role key for RLS bypass
 
-## 📈 Future Enhancements
+## 📈 Next Steps
 
+### Immediate Priorities
 - [ ] Payment processing (Stripe integration)
-- [ ] Duck QR code scanning
-- [ ] Push notifications
-- [ ] Analytics dashboard
-- [ ] Email campaign integration
+- [ ] Email service integration (SendGrid/Resend)
+- [ ] Duck QR code scanning implementation
+- [ ] Push notifications setup
+
+### Future Enhancements
+- [ ] Analytics dashboard with real-time metrics
+- [ ] Automated email campaigns
 - [ ] Mobile app (React Native)
+- [ ] A/B testing framework
+- [ ] Referral program
+- [ ] Loyalty points system
 
 ## 📄 License
 
@@ -335,4 +395,4 @@ For questions or support, please contact:
 
 ---
 
-Built with ❤️ and 🦆 in Michigan
+Built with ❤️ and 🦆 in Michigan | Last Updated: December 2024
