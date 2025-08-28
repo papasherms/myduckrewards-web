@@ -135,7 +135,7 @@ const AdminDashboard: React.FC = () => {
     try {
       // Use admin function if available (bypasses RLS)
       if (adminFunctions) {
-        await adminFunctions.approveBusiness(businessId, currentUser?.id || '')
+        await adminFunctions.approveBusiness(businessId, user?.id || '')
         showNotification('success', 'Business Approved', 'Business application has been approved')
         await fetchData()
         trackActivity('business_approved', { businessId })
@@ -244,7 +244,7 @@ const AdminDashboard: React.FC = () => {
       // Use admin function if available (bypasses RLS)
       if (adminFunctions) {
         try {
-          await adminFunctions.suspendUser(userId, reason, currentUser?.id || '')
+          await adminFunctions.suspendUser(userId, reason, user?.id || '')
           console.log('User suspended successfully using admin client')
           showNotification('success', 'User Suspended', `User has been suspended successfully`)
           await fetchAllUsers()

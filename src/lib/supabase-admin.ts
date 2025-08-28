@@ -167,7 +167,7 @@ export const adminFunctions = {
   },
 
   // Send email to user (requires email service setup)
-  async sendEmailToUser(userId: string, subject: string, htmlContent: string) {
+  async sendEmailToUser(userId: string, subject: string, _htmlContent: string) {
     if (!supabaseAdmin) throw new Error('Admin client not configured');
     
     // Get user email
