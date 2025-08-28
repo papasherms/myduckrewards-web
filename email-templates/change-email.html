@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Your Email Change - MyDuckRewards</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f7;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f4f7; padding: 40px 0;">
+        <tr>
+            <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; border-radius: 12px 12px 0 0;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700;">🦆 MyDuckRewards</h1>
+                            <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.95;">Email Change Request</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Body Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 24px; font-weight: 600; text-align: center;">Confirm Your Email Address Change</h2>
+                            
+                            <p style="margin: 0 0 25px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                Hi {{ .UserName }},
+                            </p>
+                            
+                            <p style="margin: 0 0 25px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                You've requested to change your MyDuckRewards account email address. Please confirm this change to continue.
+                            </p>
+                            
+                            <!-- Email Change Details -->
+                            <div style="background-color: #f0fdf4; border: 1px solid #86efac; padding: 20px; margin: 30px 0; border-radius: 8px;">
+                                <h3 style="margin: 0 0 15px 0; color: #14532d; font-size: 16px; font-weight: 600;">Email Change Details:</h3>
+                                <table style="width: 100%;">
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #166534; font-size: 14px; width: 120px;">Current Email:</td>
+                                        <td style="padding: 5px 0; color: #166534; font-size: 14px; font-weight: 600;">{{ .OldEmail }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px 0; color: #166534; font-size: 14px;">New Email:</td>
+                                        <td style="padding: 5px 0; color: #166534; font-size: 14px; font-weight: 600;">{{ .NewEmail }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <p style="margin: 0 0 30px 0; color: #4b5563; font-size: 16px; line-height: 1.6; text-align: center;">
+                                To complete the email change, please click the button below:
+                            </p>
+                            
+                            <!-- CTA Button -->
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center" style="padding: 0 0 30px 0;">
+                                        <a href="{{ .ConfirmationURL }}" style="display: inline-block; background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3);">
+                                            Confirm Email Change
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 14px; line-height: 1.6;">
+                                Or copy and paste this link into your browser:
+                            </p>
+                            
+                            <p style="margin: 0 0 30px 0; padding: 15px; background-color: #f9fafb; border-radius: 6px; word-break: break-all;">
+                                <a href="{{ .ConfirmationURL }}" style="color: #059669; text-decoration: none; font-size: 14px;">{{ .ConfirmationURL }}</a>
+                            </p>
+                            
+                            <!-- Important Notice -->
+                            <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; margin: 30px 0; border-radius: 4px;">
+                                <p style="margin: 0 0 10px 0; color: #991b1b; font-size: 14px; font-weight: 600;">
+                                    ⚠️ Important Security Information
+                                </p>
+                                <ul style="margin: 0; padding-left: 20px; color: #991b1b; font-size: 14px;">
+                                    <li style="margin-bottom: 5px;">This link expires in 24 hours</li>
+                                    <li style="margin-bottom: 5px;">You'll need to verify both email addresses</li>
+                                    <li style="margin-bottom: 5px;">Your login credentials will update after confirmation</li>
+                                    <li style="margin-bottom: 0;">All active sessions will be terminated for security</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- What Happens Next -->
+                            <div style="background-color: #f9fafb; padding: 20px; margin: 30px 0; border-radius: 8px;">
+                                <h3 style="margin: 0 0 15px 0; color: #1f2937; font-size: 16px; font-weight: 600;">What happens after confirmation?</h3>
+                                <ol style="margin: 0; padding-left: 20px; color: #4b5563; font-size: 14px;">
+                                    <li style="margin-bottom: 8px;">Your new email address will become your login username</li>
+                                    <li style="margin-bottom: 8px;">We'll send a confirmation to both email addresses</li>
+                                    <li style="margin-bottom: 8px;">You'll be logged out of all devices</li>
+                                    <li style="margin-bottom: 0;">Use your new email to sign in going forward</li>
+                                </ol>
+                            </div>
+                            
+                            <p style="margin: 30px 0 0 0; color: #6b7280; font-size: 14px; line-height: 1.6;">
+                                <strong>Didn't request this change?</strong> Your account may be compromised. Please <a href="{{ .SecureAccountURL }}" style="color: #ef4444; text-decoration: none;">secure your account immediately</a> and contact our support team.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-radius: 0 0 12px 12px;">
+                            <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
+                                Need help? Contact us at <a href="mailto:support@myduckrewards.com" style="color: #059669; text-decoration: none;">support@myduckrewards.com</a>
+                            </p>
+                            <p style="margin: 0 0 10px 0; color: #9ca3af; font-size: 12px;">
+                                Request made on {{ .Timestamp }} from IP: {{ .RequestIP }}
+                            </p>
+                            <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                                © 2024 MyDuckRewards. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

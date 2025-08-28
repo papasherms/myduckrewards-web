@@ -50,8 +50,16 @@ const GoogleLocationMap: React.FC<LocationMapProps> = ({
 }) => {
   const [selectedLocation, setSelectedLocation] = useState<any>(null)
   
+  const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
+  
+  // Log API key status (without exposing the key)
+  console.log('Google Maps API Key configured:', apiKey ? 'Yes' : 'No')
+  if (!apiKey) {
+    console.error('VITE_GOOGLE_MAPS_API_KEY is not set in environment variables')
+  }
+  
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    googleMapsApiKey: apiKey,
     libraries: ['places']
   })
 
@@ -98,13 +106,23 @@ const GoogleLocationMap: React.FC<LocationMapProps> = ({
   }
 
   if (loadError) {
+    console.error('Google Maps Load Error:', loadError)
     return (
       <div className="w-full h-[500px] rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-gray-600 dark:text-gray-400 mb-2">Error loading maps</p>
-          <p className="text-sm text-gray-500 dark:text-gray-500">
-            Please check your Google Maps API key configuration
+        <div className="text-center px-4">
+          <p className="text-gray-600 dark:text-gray-400 mb-2 font-semibold">Error loading Google Maps</p>
+          <p className="text-sm text-gray-500 dark:text-gray-500 mb-3">
+            {loadError.message || 'Please check your API key configuration'}
           </p>
+          <div className="text-xs text-gray-400 dark:text-gray-500 space-y-1">
+            <p>To fix this:</p>
+            <ol className="text-left list-decimal list-inside">
+              <li>Ensure VITE_GOOGLE_MAPS_API_KEY is set in your .env file</li>
+              <li>Verify the API key has Maps JavaScript API enabled</li>
+              <li>Check that billing is enabled on your Google Cloud project</li>
+              <li>Restart the development server after updating .env</li>
+            </ol>
+          </div>
         </div>
       </div>
     )

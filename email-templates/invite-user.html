@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You're Invited to MyDuckRewards!</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f7;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f4f7; padding: 40px 0;">
+        <tr>
+            <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); padding: 40px 30px; text-align: center; border-radius: 12px 12px 0 0;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700;">🦆 MyDuckRewards</h1>
+                            <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.95;">You're Invited!</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Body Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 24px; font-weight: 600; text-align: center;">Join MyDuckRewards Today!</h2>
+                            
+                            <p style="margin: 0 0 25px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                Hi there,
+                            </p>
+                            
+                            <p style="margin: 0 0 25px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                You've been invited to join MyDuckRewards! {{ if .InviterName }}{{ .InviterName }} thought you'd love collecting ducks and earning rewards with us.{{ end }}
+                            </p>
+                            
+                            <p style="margin: 0 0 30px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                MyDuckRewards is a fun loyalty program where you can:
+                            </p>
+                            
+                            <!-- Benefits List -->
+                            <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 20px; margin: 0 0 30px 0; border-radius: 4px;">
+                                <ul style="margin: 0; padding-left: 20px; color: #1e40af;">
+                                    <li style="margin-bottom: 10px; font-size: 15px;">🎯 Collect unique ducks from claw machines</li>
+                                    <li style="margin-bottom: 10px; font-size: 15px;">🎁 Earn points and redeem exclusive rewards</li>
+                                    <li style="margin-bottom: 10px; font-size: 15px;">📍 Find participating locations near you</li>
+                                    <li style="margin-bottom: 10px; font-size: 15px;">🏆 Complete challenges and win prizes</li>
+                                    <li style="margin-bottom: 0; font-size: 15px;">👥 Join a community of duck enthusiasts</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- CTA Button -->
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center" style="padding: 0 0 30px 0;">
+                                        <a href="{{ .InviteURL }}" style="display: inline-block; background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: #ffffff; text-decoration: none; padding: 16px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 6px rgba(37, 99, 235, 0.3);">
+                                            Accept Invitation
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 14px; line-height: 1.6;">
+                                Or copy and paste this link into your browser:
+                            </p>
+                            
+                            <p style="margin: 0 0 30px 0; padding: 15px; background-color: #f9fafb; border-radius: 6px; word-break: break-all;">
+                                <a href="{{ .InviteURL }}" style="color: #2563eb; text-decoration: none; font-size: 14px;">{{ .InviteURL }}</a>
+                            </p>
+                            
+                            {{ if .InviteCode }}
+                            <!-- Invite Code -->
+                            <div style="text-align: center; margin: 30px 0; padding: 20px; background-color: #fef3c7; border-radius: 8px;">
+                                <p style="margin: 0 0 10px 0; color: #92400e; font-size: 14px; font-weight: 600;">Your Invite Code:</p>
+                                <p style="margin: 0; color: #92400e; font-size: 24px; font-weight: 700; letter-spacing: 2px;">{{ .InviteCode }}</p>
+                            </div>
+                            {{ end }}
+                            
+                            {{ if .ExpiresAt }}
+                            <p style="margin: 20px 0 0 0; color: #6b7280; font-size: 14px; line-height: 1.6; text-align: center;">
+                                This invitation expires on {{ .ExpiresAt }}
+                            </p>
+                            {{ end }}
+                            
+                            <p style="margin: 30px 0 0 0; color: #6b7280; font-size: 14px; line-height: 1.6;">
+                                If you're not interested in joining MyDuckRewards, you can safely ignore this email.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-radius: 0 0 12px 12px;">
+                            <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
+                                Questions? Contact us at <a href="mailto:support@myduckrewards.com" style="color: #2563eb; text-decoration: none;">support@myduckrewards.com</a>
+                            </p>
+                            <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                                © 2024 MyDuckRewards. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

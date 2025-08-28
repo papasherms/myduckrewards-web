@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your MyDuckRewards Login Link</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f7;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f4f7; padding: 40px 0;">
+        <tr>
+            <td align="center">
+                <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); padding: 40px 30px; text-align: center; border-radius: 12px 12px 0 0;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700;">🦆 MyDuckRewards</h1>
+                            <p style="margin: 10px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.95;">Quick & Secure Login</p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Body Content -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <h2 style="margin: 0 0 20px 0; color: #1f2937; font-size: 24px; font-weight: 600; text-align: center;">Your Magic Link is Ready!</h2>
+                            
+                            <p style="margin: 0 0 25px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                Hi {{ .Email }},
+                            </p>
+                            
+                            <p style="margin: 0 0 25px 0; color: #4b5563; font-size: 16px; line-height: 1.6;">
+                                You requested a magic link to sign in to your MyDuckRewards account. No password needed!
+                            </p>
+                            
+                            <!-- Security Icon -->
+                            <div style="text-align: center; margin: 30px 0;">
+                                <div style="display: inline-block; background-color: #f3f4f6; border-radius: 50%; padding: 20px;">
+                                    <span style="font-size: 40px;">🔐</span>
+                                </div>
+                            </div>
+                            
+                            <p style="margin: 0 0 30px 0; color: #4b5563; font-size: 16px; line-height: 1.6; text-align: center;">
+                                Click the button below to instantly sign in to your account:
+                            </p>
+                            
+                            <!-- CTA Button -->
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center" style="padding: 0 0 30px 0;">
+                                        <a href="{{ .MagicLinkURL }}" style="display: inline-block; background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); color: #ffffff; text-decoration: none; padding: 16px 50px; border-radius: 8px; font-size: 16px; font-weight: 600; box-shadow: 0 4px 6px rgba(124, 58, 237, 0.3);">
+                                            Sign In to MyDuckRewards
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <p style="margin: 0 0 20px 0; color: #6b7280; font-size: 14px; line-height: 1.6;">
+                                Or copy and paste this link into your browser:
+                            </p>
+                            
+                            <p style="margin: 0 0 30px 0; padding: 15px; background-color: #f9fafb; border-radius: 6px; word-break: break-all;">
+                                <a href="{{ .MagicLinkURL }}" style="color: #7c3aed; text-decoration: none; font-size: 14px;">{{ .MagicLinkURL }}</a>
+                            </p>
+                            
+                            <!-- Security Notice -->
+                            <div style="background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 15px; margin: 30px 0; border-radius: 4px;">
+                                <p style="margin: 0 0 10px 0; color: #991b1b; font-size: 14px; font-weight: 600;">
+                                    ⚠️ Security Notice
+                                </p>
+                                <ul style="margin: 0; padding-left: 20px; color: #991b1b; font-size: 14px;">
+                                    <li style="margin-bottom: 5px;">This link expires in 1 hour</li>
+                                    <li style="margin-bottom: 5px;">It can only be used once</li>
+                                    <li style="margin-bottom: 0;">Never share this link with anyone</li>
+                                </ul>
+                            </div>
+                            
+                            <!-- Device Info -->
+                            {{ if .DeviceInfo }}
+                            <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; margin: 20px 0;">
+                                <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px; font-weight: 600;">Login Request Details:</p>
+                                <p style="margin: 0; color: #6b7280; font-size: 14px; line-height: 1.6;">
+                                    {{ if .DeviceInfo.Browser }}Browser: {{ .DeviceInfo.Browser }}<br>{{ end }}
+                                    {{ if .DeviceInfo.OS }}Operating System: {{ .DeviceInfo.OS }}<br>{{ end }}
+                                    {{ if .DeviceInfo.IP }}IP Address: {{ .DeviceInfo.IP }}<br>{{ end }}
+                                    {{ if .DeviceInfo.Location }}Location: {{ .DeviceInfo.Location }}<br>{{ end }}
+                                    Time: {{ .Timestamp }}
+                                </p>
+                            </div>
+                            {{ end }}
+                            
+                            <p style="margin: 30px 0 0 0; color: #6b7280; font-size: 14px; line-height: 1.6;">
+                                If you didn't request this login link, please ignore this email and consider changing your password for security.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f9fafb; padding: 30px; text-align: center; border-radius: 0 0 12px 12px;">
+                            <p style="margin: 0 0 10px 0; color: #6b7280; font-size: 14px;">
+                                Need help? Contact us at <a href="mailto:support@myduckrewards.com" style="color: #7c3aed; text-decoration: none;">support@myduckrewards.com</a>
+                            </p>
+                            <p style="margin: 0 0 10px 0; color: #9ca3af; font-size: 12px;">
+                                For security reasons, this link will expire at {{ .ExpiresAt }}
+                            </p>
+                            <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                                © 2024 MyDuckRewards. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

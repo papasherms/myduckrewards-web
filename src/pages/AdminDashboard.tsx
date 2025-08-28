@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
 import { 
   Shield,
+  Ban,
   Users,
   Building,
   MapPin,
@@ -20,7 +21,8 @@ import {
   AlertCircle,
   Search,
   Clock,
-  UserPlus
+  UserPlus,
+  Edit
 } from 'lucide-react'
 import AnimatedButton from '../components/AnimatedButton'
 import { AddUserModal, AddBusinessModal, AddLocationModal, SuspendUserModal } from '../components/AdminModals'
@@ -47,6 +49,13 @@ const AdminDashboard: React.FC = () => {
   const [filterType, setFilterType] = useState('all')
   const [sortBy, setSortBy] = useState('created_at')
   const [recentActivity, setRecentActivity] = useState<any[]>([])
+  const [isEditingProfile, setIsEditingProfile] = useState(false)
+  const [profileForm, setProfileForm] = useState({
+    first_name: '',
+    last_name: '',
+    phone: '',
+    zip_code: ''
+  })
   const { notification, showNotification, hideNotification } = useNotification()
 
   useEffect(() => {
@@ -54,6 +63,13 @@ const AdminDashboard: React.FC = () => {
       navigate('/signin')
     } else {
       fetchData()
+      // Initialize profile form with current values
+      setProfileForm({
+        first_name: userProfile?.first_name || '',
+        last_name: userProfile?.last_name || '',
+        phone: userProfile?.phone || '',
+        zip_code: userProfile?.zip_code || ''
+      })
     }
   }, [user, userProfile, navigate])
   
@@ -186,9 +202,26 @@ const AdminDashboard: React.FC = () => {
   }
 
   const suspendUser = async (userId: string, reason: string) => {
+    console.log('Starting suspension for user:', userId, 'with reason:', reason)
     setLoading(true)
     try {
-      const { error } = await supabase
+      // First verify the user exists
+      const { data: userData, error: fetchError } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single()
+      
+      if (fetchError) {
+        console.error('Error fetching user:', fetchError)
+        showNotification('error', 'User Not Found', 'Could not find user to suspend')
+        return
+      }
+      
+      console.log('User found:', userData)
+      
+      // Update user with suspension data
+      const { data, error } = await supabase
         .from('users')
         .update({ 
           is_active: false,
@@ -197,18 +230,26 @@ const AdminDashboard: React.FC = () => {
           updated_at: new Date().toISOString()
         })
         .eq('id', userId)
+        .select()
+        .single()
       
       if (error) {
         console.error('Error suspending user:', error)
-        showNotification('error', 'Failed to suspend user', error.message)
+        // Check if it's a column error
+        if (error.message.includes('column')) {
+          showNotification('error', 'Database Schema Error', 'Suspension columns may be missing. Please run the migration script.')
+        } else {
+          showNotification('error', 'Failed to suspend user', error.message)
+        }
       } else {
-        showNotification('success', 'User Suspended', `User has been suspended. Reason: ${reason}`)
+        console.log('User suspended successfully:', data)
+        showNotification('success', 'User Suspended', `User has been suspended successfully`)
         await fetchAllUsers()
         trackActivity('user_suspended', { userId, reason })
       }
     } catch (err) {
-      console.error('Error:', err)
-      showNotification('error', 'Error', 'An error occurred while suspending the user')
+      console.error('Unexpected error:', err)
+      showNotification('error', 'Error', 'An unexpected error occurred while suspending the user')
     } finally {
       setLoading(false)
     }
@@ -277,13 +318,15 @@ const AdminDashboard: React.FC = () => {
     }
   }
 
+  const suspendedUsersCount = allUsers.filter(u => u.is_active === false).length
+  
   const stats = [
     { label: 'Total Users', value: allUsers.length.toString(), icon: Users, color: 'from-blue-500 to-blue-600' },
     { label: 'Active Businesses', value: allBusinesses.filter(b => b.approval_status === 'approved').length.toString(), icon: Building, color: 'from-purple-500 to-purple-600' },
     { label: 'Machine Locations', value: allLocations.length.toString(), icon: MapPin, color: 'from-green-500 to-green-600' },
-    { label: 'Ducks in Circulation', value: '0', icon: Package, color: 'from-duck-500 to-orange-500' },
+    { label: 'Suspended Users', value: suspendedUsersCount.toString(), icon: Ban, color: 'from-red-500 to-red-600' },
     { label: 'Monthly Revenue', value: '$0', icon: DollarSign, color: 'from-emerald-500 to-emerald-600' },
-    { label: 'System Health', value: '100%', icon: Activity, color: 'from-red-500 to-pink-500' }
+    { label: 'System Health', value: '100%', icon: Activity, color: 'from-green-500 to-green-600' }
   ]
 
   const tabs = [
@@ -452,11 +495,11 @@ const AdminDashboard: React.FC = () => {
                     </div>
                     <div className="bg-gray-700/30 rounded-lg p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-gray-400 text-sm">API Calls Today</span>
-                        <span className="text-white font-medium">1,234</span>
+                        <span className="text-gray-400 text-sm">Suspended Users</span>
+                        <span className="text-white font-medium">{suspendedUsersCount}</span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-2">
-                        <div className="bg-blue-500 h-2 rounded-full" style={{ width: '45%' }}></div>
+                        <div className="bg-red-500 h-2 rounded-full" style={{ width: `${Math.min((suspendedUsersCount / Math.max(allUsers.length, 1)) * 100, 100)}%` }}></div>
                       </div>
                     </div>
                     <div className="bg-gray-700/30 rounded-lg p-4">
@@ -491,7 +534,8 @@ const AdminDashboard: React.FC = () => {
                 <div className="bg-gray-700/30 rounded-lg p-4 mb-4">
                   <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-1 relative">
-                      <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                      <label className="block text-xs text-gray-400 mb-1">Search Users</label>
+                      <Search size={20} className="absolute left-3 top-1/2 transform translate-y-1 text-gray-400" />
                       <input
                         type="text"
                         placeholder="Search by name, email, or ID..."
@@ -500,26 +544,32 @@ const AdminDashboard: React.FC = () => {
                         className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-400 transition-colors"
                       />
                     </div>
-                    <select
-                      value={filterType}
-                      onChange={(e) => setFilterType(e.target.value)}
-                      className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
-                    >
-                      <option value="all">All Types</option>
-                      <option value="customer">Customers</option>
-                      <option value="business">Business</option>
-                      <option value="admin">Admins</option>
-                    </select>
-                    <select
-                      value={sortBy}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
-                    >
-                      <option value="created_at">Date Created</option>
-                      <option value="name">Name</option>
-                      <option value="email">Email</option>
-                      <option value="user_type">Type</option>
-                    </select>
+                    <div>
+                      <label className="block text-xs text-gray-400 mb-1">Filter by Type</label>
+                      <select
+                        value={filterType}
+                        onChange={(e) => setFilterType(e.target.value)}
+                        className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
+                      >
+                        <option value="all">All Types</option>
+                        <option value="customer">Customers</option>
+                        <option value="business">Business</option>
+                        <option value="admin">Admins</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-400 mb-1">Sort By</label>
+                      <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-duck-500 focus:border-duck-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors appearance-none"
+                      >
+                        <option value="created_at">Date Created</option>
+                        <option value="name">Name</option>
+                        <option value="email">Email</option>
+                        <option value="user_type">Type</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
                 {allUsers.length === 0 ? (
@@ -613,7 +663,7 @@ const AdminDashboard: React.FC = () => {
                                         className="text-yellow-400 hover:text-yellow-300 transition-colors"
                                         title="Suspend User"
                                       >
-                                        <Shield size={16} />
+                                        <Ban size={16} />
                                       </button>
                                     )}
                                     <button
@@ -871,24 +921,44 @@ const AdminDashboard: React.FC = () => {
                 
                 {/* Admin Profile Section */}
                 <div className="bg-gray-700/30 rounded-lg p-6">
-                  <h3 className="text-white font-bold text-lg mb-4">Admin Profile</h3>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-white font-bold text-lg">Admin Profile</h3>
+                    {!isEditingProfile && (
+                      <button
+                        onClick={() => setIsEditingProfile(true)}
+                        className="text-duck-400 hover:text-duck-300 transition-colors flex items-center gap-2"
+                        title="Edit Profile"
+                      >
+                        <Edit size={20} />
+                        <span className="text-sm">Edit</span>
+                      </button>
+                    )}
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-medium text-gray-400 mb-2">First Name</label>
                       <input
                         type="text"
-                        value={userProfile?.first_name || ''}
-                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-duck-500"
+                        value={isEditingProfile ? profileForm.first_name : userProfile?.first_name || ''}
+                        onChange={(e) => setProfileForm({...profileForm, first_name: e.target.value})}
+                        className={`w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-duck-500 transition-colors ${
+                          isEditingProfile ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400'
+                        }`}
                         placeholder="Enter first name"
+                        disabled={!isEditingProfile}
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-400 mb-2">Last Name</label>
                       <input
                         type="text"
-                        value={userProfile?.last_name || ''}
-                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-duck-500"
+                        value={isEditingProfile ? profileForm.last_name : userProfile?.last_name || ''}
+                        onChange={(e) => setProfileForm({...profileForm, last_name: e.target.value})}
+                        className={`w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-duck-500 transition-colors ${
+                          isEditingProfile ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400'
+                        }`}
                         placeholder="Enter last name"
+                        disabled={!isEditingProfile}
                       />
                     </div>
                     <div>
@@ -896,7 +966,7 @@ const AdminDashboard: React.FC = () => {
                       <input
                         type="email"
                         value={user?.email || ''}
-                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-duck-500"
+                        className="w-full px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-gray-400 focus:ring-2 focus:ring-duck-500"
                         disabled
                       />
                     </div>
@@ -904,25 +974,68 @@ const AdminDashboard: React.FC = () => {
                       <label className="block text-sm font-medium text-gray-400 mb-2">Phone</label>
                       <input
                         type="tel"
-                        value={userProfile?.phone || ''}
-                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-duck-500"
+                        value={isEditingProfile ? profileForm.phone : userProfile?.phone || ''}
+                        onChange={(e) => setProfileForm({...profileForm, phone: e.target.value})}
+                        className={`w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-duck-500 transition-colors ${
+                          isEditingProfile ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400'
+                        }`}
                         placeholder="Enter phone number"
+                        disabled={!isEditingProfile}
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-400 mb-2">ZIP Code</label>
                       <input
                         type="text"
-                        value={userProfile?.zip_code || ''}
-                        className="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-duck-500"
+                        value={isEditingProfile ? profileForm.zip_code : userProfile?.zip_code || ''}
+                        onChange={(e) => setProfileForm({...profileForm, zip_code: e.target.value})}
+                        className={`w-full px-3 py-2 border border-gray-600 rounded-lg focus:ring-2 focus:ring-duck-500 transition-colors ${
+                          isEditingProfile ? 'bg-gray-700 text-white' : 'bg-gray-800 text-gray-400'
+                        }`}
                         placeholder="Enter ZIP code"
+                        disabled={!isEditingProfile}
                       />
                     </div>
-                    <div className="flex items-end">
-                      <AnimatedButton variant="primary" size="md" className="w-full">
-                        Update Profile
-                      </AnimatedButton>
-                    </div>
+                    {isEditingProfile && (
+                      <div className="flex items-end gap-2">
+                        <AnimatedButton 
+                          variant="primary" 
+                          size="md" 
+                          className="flex-1"
+                          onClick={async () => {
+                            const { error } = await supabase
+                              .from('users')
+                              .update(profileForm)
+                              .eq('id', userProfile?.id)
+                            
+                            if (error) {
+                              showNotification('error', 'Update Failed', error.message)
+                            } else {
+                              showNotification('success', 'Profile Updated', 'Your profile has been updated successfully')
+                              setIsEditingProfile(false)
+                              fetchData()
+                            }
+                          }}
+                        >
+                          Update Profile
+                        </AnimatedButton>
+                        <AnimatedButton 
+                          variant="outline" 
+                          size="md" 
+                          onClick={() => {
+                            setIsEditingProfile(false)
+                            setProfileForm({
+                              first_name: userProfile?.first_name || '',
+                              last_name: userProfile?.last_name || '',
+                              phone: userProfile?.phone || '',
+                              zip_code: userProfile?.zip_code || ''
+                            })
+                          }}
+                        >
+                          Cancel
+                        </AnimatedButton>
+                      </div>
+                    )}
                   </div>
                 </div>
                 
