@@ -31,11 +31,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredUserT
   if (requiredUserType && userProfile?.user_type !== requiredUserType) {
     // Redirect to appropriate dashboard based on user type
     if (userProfile?.user_type === 'admin') {
-      return <Navigate to="/admin" replace />
+      return <Navigate to="/dashboard/admin" replace />
     } else if (userProfile?.user_type === 'business') {
-      return <Navigate to="/business-dashboard" replace />
+      return <Navigate to="/dashboard/business" replace />
     } else {
-      return <Navigate to="/dashboard" replace />
+      return <Navigate to="/dashboard/customer" replace />
     }
   }
 

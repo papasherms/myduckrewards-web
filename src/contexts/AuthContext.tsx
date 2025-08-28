@@ -70,7 +70,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) {
         console.error('Error fetching user profile:', error)
+        // If user doesn't exist in public.users, create a basic profile
+        if (error.code === 'PGRST116') {
+          console.log('User not found in public.users, checking auth.users...')
+          const { data: { user } } = await supabase.auth.getUser()
+          if (user) {
+            // Create basic profile
+            const { data: newProfile, error: createError } = await supabase
+              .from('users')
+              .insert({
+                id: user.id,
+                email: user.email,
+                user_type: 'customer',
+                created_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              })
+              .select()
+              .single()
+            
+            if (!createError) {
+              setUserProfile(newProfile)
+            }
+          }
+        }
       } else {
+        console.log('User profile fetched:', data)
         setUserProfile(data)
       }
     } catch (error) {

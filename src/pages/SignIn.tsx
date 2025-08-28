@@ -80,11 +80,11 @@ const SignIn: React.FC = () => {
         
         // Redirect based on user type
         if (profile?.user_type === 'admin') {
-          navigate('/admin')
+          navigate('/dashboard/admin')
         } else if (profile?.user_type === 'business') {
-          navigate('/business-dashboard')
+          navigate('/dashboard/business')
         } else {
-          navigate('/dashboard')
+          navigate('/dashboard/customer')
         }
       }
     } catch (err) {

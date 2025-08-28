@@ -45,9 +45,24 @@ function App() {
                   <CustomerDashboard />
                 </ProtectedRoute>
               } />
+              <Route path="/dashboard/customer" element={
+                <ProtectedRoute requiredUserType="customer">
+                  <CustomerDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/business" element={
+                <ProtectedRoute requiredUserType="business">
+                  <BusinessDashboard />
+                </ProtectedRoute>
+              } />
               <Route path="/business-dashboard" element={
                 <ProtectedRoute requiredUserType="business">
                   <BusinessDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/admin" element={
+                <ProtectedRoute requiredUserType="admin">
+                  <AdminDashboard />
                 </ProtectedRoute>
               } />
               <Route path="/admin" element={
