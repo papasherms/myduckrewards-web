@@ -79,11 +79,15 @@ const SignIn: React.FC = () => {
         }
         
         // Redirect based on user type
+        console.log('Redirecting based on user_type:', profile?.user_type)
         if (profile?.user_type === 'admin') {
+          console.log('Navigating to admin dashboard')
           navigate('/dashboard/admin')
         } else if (profile?.user_type === 'business') {
+          console.log('Navigating to business dashboard')
           navigate('/dashboard/business')
         } else {
+          console.log('Navigating to customer dashboard (default)')
           navigate('/dashboard/customer')
         }
       }

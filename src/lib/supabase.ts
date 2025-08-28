@@ -43,11 +43,23 @@ export const createBusiness = async (businessData: any) => {
 }
 
 export const getUserProfile = async (userId: string) => {
+  console.log('Getting user profile for ID:', userId)
   const { data, error } = await supabase
     .from('users')
     .select('*')
     .eq('id', userId)
     .single()
+  
+  if (error) {
+    console.error('Error getting user profile:', error)
+  } else {
+    console.log('User profile retrieved:', { 
+      id: data?.id, 
+      email: data?.email, 
+      user_type: data?.user_type 
+    })
+  }
+  
   return { data, error }
 }
 
